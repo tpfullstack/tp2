@@ -1,4 +1,6 @@
-<div *ngIf="events.length > 0; else noEvents">
+<button class="btn-add" (click)="navigateToAddEvent()">Ajouter un événement</button>
+
+<div class="event-table-container">
   <table class="event-table">
     <thead>
       <tr>
@@ -22,8 +24,7 @@
           </ul>
         </td>
         <td>
-          <button (click)="detailsEvent(event.id)">Details</button>
-          <button (click)="editEvent(event)">Modifier</button>
+          <button (click)="detailsEvent(event.id)" class="btn-details">Details</button>
           <button (click)="deleteEvent(event.id)" class="btn-delete">Supprimer</button>
         </td>
       </tr>
@@ -35,34 +36,32 @@
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
   </div>
 </div>
-
-<!-- Détails de l'événement -->
-<div *ngIf="selectedEvent" class="event-details">
-  <h2>Détails de l'événement</h2>
-  <form (ngSubmit)="updateEvent()" #eventForm="ngForm">
-    <div>
-      <label for="label">Label :</label>
-      <input type="text" id="label" [(ngModel)]="selectedEvent.label" name="label" required>
-    </div>
-    <div>
-      <label for="startDate">Date de début :</label>
-      <input type="date" id="startDate" [(ngModel)]="selectedEvent.startDate" name="startDate" required>
-    </div>
-    <div>
-      <label for="endDate">Date de fin :</label>
-      <input type="date" id="endDate" [(ngModel)]="selectedEvent.endDate" name="endDate" required>
-    </div>
-    <h3>Artistes</h3>
-    <div *ngFor="let artist of selectedEvent.artists; let i = index">
-      <label for="artist{{i}}">Artiste {{i + 1}} :</label>
-      <input type="text" id="artist{{i}}" [(ngModel)]="artist.label" name="artist{{i}}" required>
-    </div>
-
-    <button type="submit" [disabled]="!eventForm.form.valid">Valider</button>
-    <button type="button" (click)="selectedEvent = null">Fermer</button>
-  </form>
+<!-- Modal -->
+<div *ngIf="selectedEvent" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Détails de l'événement</h2>
+    <form (ngSubmit)="updateEvent()">
+      <label>
+        Nom de l'événement :
+        <input type="text" [(ngModel)]="selectedEvent.label" name="label" required />
+      </label>
+      <label>
+        Date de début :
+        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required />
+      </label>
+      <label>
+        Date de fin :
+        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
+      </label>
+      <label>
+        Artistes :
+        <textarea [(ngModel)]="selectedEvent.artists" name="artists"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn-details">Mettre à jour</button>
+        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<ng-template #noEvents>
-  <p>Aucun événement disponible.</p>
-</ng-template>

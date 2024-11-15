@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { CommonModule } from '@angular/common';  // Import pour les directives *ngIf, *ngFor
 import { FormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router';  // Ajout de l'import du Router
+
 @Component({
   selector: 'app-event-list',
   standalone: true,
@@ -16,7 +18,7 @@ export class EventListComponent implements OnInit {
   pageSize: number = 5;
   totalPages: number = 0;
 
-  constructor(private eventService: EventService) {}
+  constructor(private eventService: EventService, private router: Router) {}  // Injection du Router
 
   ngOnInit(): void {
     this.loadEvents();
@@ -33,6 +35,7 @@ export class EventListComponent implements OnInit {
       }
     );
   }
+
   decrementPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -49,16 +52,6 @@ export class EventListComponent implements OnInit {
 
   editEvent(event: any): void {
     console.log('Édition de l\'événement :', event);
-  }
-  detailsEvent(eventId: string): void {
-    this.eventService.getEventById(eventId).subscribe(
-      (event) => {
-        this.selectedEvent = event;
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des détails de l\'événement', error);
-      }
-    );
   }
 
   updateEvent(): void {
@@ -89,4 +82,23 @@ export class EventListComponent implements OnInit {
       );
     }
   }
+
+  navigateToAddEvent(): void {
+    this.router.navigate(['/create-event']);  // Redirige vers la page d'ajout d'événement
+  }
+  closeModal(): void {
+    this.selectedEvent = null; // Ferme la modal
+  }
+  
+  detailsEvent(eventId: string): void {
+    this.eventService.getEventById(eventId).subscribe(
+      (event) => {
+        this.selectedEvent = event; // Ouvre la modal avec les détails de l'événement
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des détails de l\'événement', error);
+      }
+    );
+  }
+  
 }
