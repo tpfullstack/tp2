@@ -13,4 +13,11 @@ export class HeaderComponent {
   navigateToAddEvent(): void {
     this.router.navigate(['/create-event']);
   }
+  navigateToArtistes(): void {
+    this.router.navigate(['/artists']);
+  }
+  
+  navigateToEvenements(): void {
+    this.router.navigate(['/events']);
+  }
 }
