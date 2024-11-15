@@ -1,0 +1,42 @@
+<div *ngIf="events.length > 0; else noEvents">
+  <table class="event-table">
+    <thead>
+      <tr>
+        <th>Événement</th>
+        <th>Date de début</th>
+        <th>Date de fin</th>
+        <th>Artistes</th>
+        <th>Actions</th> <!-- Nouvelle colonne pour les actions -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let event of events">
+        <td>{{ event.label }}</td>
+        <td>{{ event.startDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ event.endDate | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let artist of event.artists">
+              {{ artist.label }}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <!-- Boutons Modifier et Supprimer -->
+          <button (click)="detailsEvent(event)">Details</button>
+          <button (click)="editEvent(event)">Modifier</button>
+          <button (click)="deleteEvent(event.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
+    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
+  </div>
+</div>
+
+<ng-template #noEvents>
+  <p>Aucun événement disponible.</p>
+</ng-template>
