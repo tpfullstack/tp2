@@ -51,11 +51,6 @@ export class EventListComponent implements OnInit {
   editEvent(event: any): void {
     console.log('Édition de l\'événement :', event);
   }
-
-  deleteEvent(eventId: string): void {
-    console.log('Suppression de l\'événement avec ID :', eventId);
-  }
-
   detailsEvent(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (event) => {
@@ -65,5 +60,19 @@ export class EventListComponent implements OnInit {
         console.error('Erreur lors de la récupération des détails de l\'événement', error);
       }
     );
+  }
+  deleteEvent(eventId: string): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+      this.eventService.deleteEventById(eventId).subscribe(
+        () => {
+          console.log('Événement supprimé avec succès');
+          // Recharge la liste après la suppression
+          this.loadEvents();
+        },
+        (error) => {
+          console.error('Erreur lors de la suppression de l\'événement', error);
+        }
+      );
+    }
   }
 }
