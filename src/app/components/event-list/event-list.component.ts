@@ -1,6 +1,4 @@
-
-
-import { CommonModule } from '@angular/common'; // Importer CommonModule
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
 
@@ -13,6 +11,7 @@ import { EventService } from '../../services/event.service';
 })
 export class EventListComponent implements OnInit {
   events: any[] = [];
+  selectedEvent: any = null; // Nouveau champ
   currentPage: number = 0;
   pageSize: number = 5;
   totalPages: number = 0;
@@ -35,7 +34,6 @@ export class EventListComponent implements OnInit {
     );
   }
 
-  // Méthode pour changer de page (précédent)
   decrementPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -43,26 +41,29 @@ export class EventListComponent implements OnInit {
     }
   }
 
-  // Méthode pour changer de page (suivant)
   incrementPage(): void {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
       this.loadEvents();
     }
   }
-    // Méthode pour éditer un événement
-    editEvent(event: any): void {
-      console.log('Édition de l\'événement :', event);
-      // Ici, tu peux rediriger vers un formulaire d'édition ou ouvrir un modal
-      // Par exemple : this.router.navigate(['/edit-event', event.id]);
-    }
-  
-    // Méthode pour supprimer un événement
-    deleteEvent(eventId: string): void {
-      
-    }
-    // Méthode pour supprimer un événement
-    detailsEvent(eventId: string): void {
-      
-    }
+
+  editEvent(event: any): void {
+    console.log('Édition de l\'événement :', event);
+  }
+
+  deleteEvent(eventId: string): void {
+    console.log('Suppression de l\'événement avec ID :', eventId);
+  }
+
+  detailsEvent(eventId: string): void {
+    this.eventService.getEventById(eventId).subscribe(
+      (event) => {
+        this.selectedEvent = event;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des détails de l\'événement', error);
+      }
+    );
+  }
 }

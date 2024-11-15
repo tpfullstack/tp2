@@ -6,7 +6,7 @@
         <th>Date de début</th>
         <th>Date de fin</th>
         <th>Artistes</th>
-        <th>Actions</th> <!-- Nouvelle colonne pour les actions -->
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -22,8 +22,7 @@
           </ul>
         </td>
         <td>
-          <!-- Boutons Modifier et Supprimer -->
-          <button (click)="detailsEvent(event)">Details</button>
+          <button (click)="detailsEvent(event.id)">Details</button>
           <button (click)="editEvent(event)">Modifier</button>
           <button (click)="deleteEvent(event.id)">Supprimer</button>
         </td>
@@ -35,6 +34,21 @@
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
   </div>
+</div>
+
+<!-- Détails de l'événement -->
+<div *ngIf="selectedEvent" class="event-details">
+  <h2>Détails de l'événement</h2>
+  <p><strong>Label :</strong> {{ selectedEvent.label }}</p>
+  <p><strong>Date de début :</strong> {{ selectedEvent.startDate | date:'dd/MM/yyyy' }}</p>
+  <p><strong>Date de fin :</strong> {{ selectedEvent.endDate | date:'dd/MM/yyyy' }}</p>
+  <h3>Artistes</h3>
+  <ul>
+    <li *ngFor="let artist of selectedEvent.artists">
+      {{ artist.label }}
+    </li>
+  </ul>
+  <button (click)="selectedEvent = null">Fermer</button>
 </div>
 
 <ng-template #noEvents>
