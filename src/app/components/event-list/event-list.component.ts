@@ -1,17 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
-
+import { CommonModule } from '@angular/common';  // Import pour les directives *ngIf, *ngFor
+import { FormsModule } from '@angular/forms'; 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.css']
 })
 export class EventListComponent implements OnInit {
   events: any[] = [];
-  selectedEvent: any = null; // Nouveau champ
+  selectedEvent: any = null;
   currentPage: number = 0;
   pageSize: number = 5;
   totalPages: number = 0;
@@ -33,7 +33,6 @@ export class EventListComponent implements OnInit {
       }
     );
   }
-
   decrementPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -61,13 +60,28 @@ export class EventListComponent implements OnInit {
       }
     );
   }
+
+  updateEvent(): void {
+    if (this.selectedEvent) {
+      this.eventService.updateEvent(this.selectedEvent.id, this.selectedEvent).subscribe(
+        (response) => {
+          console.log('Événement mis à jour avec succès', response);
+          this.loadEvents();  // Recharge la liste des événements après mise à jour
+          this.selectedEvent = null;  // Ferme la vue des détails
+        },
+        (error) => {
+          console.error('Erreur lors de la mise à jour de l\'événement', error);
+        }
+      );
+    }
+  }
+
   deleteEvent(eventId: string): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
       this.eventService.deleteEventById(eventId).subscribe(
         () => {
           console.log('Événement supprimé avec succès');
-          // Recharge la liste après la suppression
-          this.loadEvents();
+          this.loadEvents();  // Recharge la liste après suppression
         },
         (error) => {
           console.error('Erreur lors de la suppression de l\'événement', error);
