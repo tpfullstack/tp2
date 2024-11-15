@@ -1,0 +1,49 @@
+<button class="btn-add" (click)="navigateToAddArtist()">Ajouter un artiste</button>
+
+<div class="artist-table-container">
+  <table class="artist-table">
+    <thead>
+      <tr>
+        <th>Artiste</th>
+        <th>Événements</th> <!-- Nouvelle colonne pour les événements -->
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let artist of artists">
+        <td>{{ artist.label }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let event of artist.events">{{ event.label }}</li>
+          </ul>
+        </td>
+        <td>
+          <button (click)="detailsArtist(artist.id)" class="btn-details">Détails</button>
+          <button (click)="deleteArtist(artist.id)" class="btn-delete">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
+    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
+  </div>
+</div>
+
+<!-- Modal pour les détails -->
+<div *ngIf="selectedArtist" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Détails de l'artiste</h2>
+    <form (ngSubmit)="updateArtist()">
+      <label>
+        Nom de l'artiste :
+        <input type="text" [(ngModel)]="selectedArtist.label" name="label" required />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn-details">Mettre à jour</button>
+        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
