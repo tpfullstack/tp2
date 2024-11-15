@@ -1,0 +1,16 @@
+<div class="create-artist-container">
+    <h2>Créer un Artiste</h2>
+    <form (ngSubmit)="createArtist()">
+      <label for="label">Nom de l'artiste:</label>
+      <input type="text" id="label" [(ngModel)]="artist.label" name="label" required>
+  
+      <label for="description">Description:</label>
+      <textarea id="description" [(ngModel)]="artist.description" name="description" required></textarea>
+  
+      <div class="form-actions">
+        <button type="submit" class="btn-add">Créer</button>
+        <button type="button" (click)="router.navigate(['/artists'])" class="btn-cancel">Annuler</button>
+      </div>
+    </form>
+  </div>
+  
