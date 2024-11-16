@@ -57,6 +57,10 @@ export class EventService {
       })
     );
   }
+  unlinkArtistFromEvent(eventId: string, artistId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${eventId}/artists/${artistId}`);
+  }
+  
   
   
 }
