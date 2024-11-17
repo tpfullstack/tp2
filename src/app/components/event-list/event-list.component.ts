@@ -70,20 +70,37 @@ export class EventListComponent implements OnInit {
       );
     }
   }
-
-  attachArtist(eventId: string, artistId: string): void {
-    if (artistId) {
-      this.eventService.linkArtistToEvent(eventId, artistId).subscribe(
-        () => {
-          console.log('Artiste associé à l\'événement');
-          this.loadEvents();  // Recharge la liste des événements après ajout
-        },
-        (error) => {
-          console.error('Erreur lors de l\'association de l\'artiste', error);
-        }
-      );
-    }
+  loadEventDetails(eventId: string): void {
+    this.eventService.getEventById(eventId).subscribe({
+      next: (data) => {
+        this.selectedEvent = data; // Mettez à jour les détails de l'événement
+        console.log('Détails de l\'événement récupérés:', this.selectedEvent);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des détails de l\'événement :', err);
+        alert('Impossible de récupérer les détails de l\'événement.');
+      }
+    });
   }
+  
+  attachArtist(eventId: string, artistId: string): void {
+    if (!artistId) {
+      alert('Veuillez sélectionner un artiste à associer.');
+      return;
+    }
+  
+    this.eventService.linkArtistToEvent(eventId, artistId).subscribe({
+      next: () => {
+        alert('Artiste associé avec succès.');
+        this.loadEventDetails(eventId); // Recharge les détails de l'événement
+      },
+      error: (err) => {
+        console.error('Erreur lors de l\'association de l\'artiste :', err);
+        alert('Impossible d\'associer l\'artiste.');
+      },
+    });
+  }
+  
 
   detachArtist(eventId: string, artistId: string): void {
     if (artistId) {
@@ -138,7 +155,10 @@ export class EventListComponent implements OnInit {
       this.loadEvents();
     }
   }
-
+  navigateToDetail(event: any): void {
+    this.router.navigate(['/events', event.id]);
+  }
+  
   incrementPage(): void {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;

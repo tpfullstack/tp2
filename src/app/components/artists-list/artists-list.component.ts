@@ -96,7 +96,7 @@ export class ArtistsListComponent implements OnInit {
     );
   }
   navigateToDetail(artistId: string): void {
-    this.router.navigate([`/artist/${artistId}`]);
+    this.router.navigate([`/artists/${artistId}`]);
   }
   deleteArtist(artistId: string): void {
     this.artistService.deleteArtistById(artistId).subscribe(() => {

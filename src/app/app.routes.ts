@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { EventListComponent } from './components/event-list/event-list.component'; // Exemple
 import { ArtistsListComponent } from './components/artists-list/artists-list.component'; // Nouvelle importation
 import { CreateArtistComponent } from './components/create-artist/create-artist.component'; // Composant Create Artist
+import { EventDetailComponent } from './components/event-details/event-details.component'; // Corrigez le nom ici
 import { ArtistDetailComponent } from './components/artist-details/artist-details.component';  // Importation du composant Détail
 import { CreateEventComponent } from './components/create-event/create-event.component';
 export const routes: Route[] = [
@@ -17,8 +18,10 @@ export const routes: Route[] = [
     path: 'artists', // Route pour la liste des artistes
     component: ArtistsListComponent
   },
+  { path: 'events/:id', 
+  component: EventDetailComponent },
   {
-    path: 'artist/:id',  // Route pour afficher les détails d'un artiste
+    path: 'artists/:id',  // Route pour afficher les détails d'un artiste
     component: ArtistDetailComponent
   },
   {
