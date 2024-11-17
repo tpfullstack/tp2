@@ -39,4 +39,8 @@ export class ArtistDetailComponent implements OnInit {
   navigateToArtists() {
     this.router.navigate(['/artists']);
   }
+  closeModal() {
+    this.artist = null; // Ferme la modal en réinitialisant l'artiste
+  }
+  
 }

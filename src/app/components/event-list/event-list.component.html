@@ -1,6 +1,11 @@
-<button class="btn-add" (click)="navigateToAddEvent()">Ajouter un événement</button>
-
 <div class="event-table-container">
+  <!-- Conteneur Titre et Bouton -->
+  <div class="event-table-header">
+    <h1>Liste des événements</h1>
+    <button class="btn-add" (click)="navigateToAddEvent()">Ajouter un événement</button>
+  </div>
+
+  <!-- Table des événements -->
   <table class="event-table">
     <thead>
       <tr>
@@ -31,11 +36,13 @@
     </tbody>
   </table>
 
+  <!-- Pagination -->
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
   </div>
 </div>
+
 <!-- Modal -->
 <div *ngIf="selectedEvent" class="modal-overlay" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
@@ -81,5 +88,3 @@
     </form>
   </div>
 </div>
-
-

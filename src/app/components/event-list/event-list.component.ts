@@ -71,17 +71,25 @@ export class EventListComponent implements OnInit {
     }
   }
   loadEventDetails(eventId: string): void {
-    this.eventService.getEventById(eventId).subscribe({
-      next: (data) => {
-        this.selectedEvent = data; // Mettez à jour les détails de l'événement
+    this.eventService.getEventById(eventId).subscribe(
+      (data) => {
+        this.selectedEvent = data; 
         console.log('Détails de l\'événement récupérés:', this.selectedEvent);
+  
+        // Vérifier si la date est déjà au format correct
+        if (this.selectedEvent) {
+          // Si les dates sont déjà au format yyyy-MM-dd, pas besoin de les convertir
+          this.selectedEvent.startDate = this.selectedEvent.startDate || '';
+          this.selectedEvent.endDate = this.selectedEvent.endDate || '';
+        }
       },
-      error: (err) => {
-        console.error('Erreur lors de la récupération des détails de l\'événement :', err);
+      (error) => {
+        console.error('Erreur lors de la récupération des détails de l\'événement :', error);
         alert('Impossible de récupérer les détails de l\'événement.');
       }
-    });
+    );
   }
+  
   
   attachArtist(eventId: string, artistId: string): void {
     if (!artistId) {

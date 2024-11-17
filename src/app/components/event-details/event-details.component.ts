@@ -36,8 +36,15 @@ export class EventDetailComponent implements OnInit {
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (data) => {
-        this.selectedEvent = data; // Mettre à jour les détails de l'événement
+        this.selectedEvent = data; 
         console.log('Détails de l\'événement récupérés:', this.selectedEvent);
+  
+        // Vérifier si la date est déjà au format correct
+        if (this.selectedEvent) {
+          // Si les dates sont déjà au format yyyy-MM-dd, pas besoin de les convertir
+          this.selectedEvent.startDate = this.selectedEvent.startDate || '';
+          this.selectedEvent.endDate = this.selectedEvent.endDate || '';
+        }
       },
       (error) => {
         console.error('Erreur lors de la récupération des détails de l\'événement :', error);
@@ -45,6 +52,15 @@ export class EventDetailComponent implements OnInit {
       }
     );
   }
+  
+  convertDateToApiFormat(date: string): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
 
   loadAvailableArtists(): void {
     this.artistService.getArtists(0, 100).subscribe(
@@ -107,4 +123,5 @@ export class EventDetailComponent implements OnInit {
     this.selectedEvent = null; // Ferme la modal
     this.router.navigate(['/events']);  // Redirige vers la liste des événements
   }
+  
 }

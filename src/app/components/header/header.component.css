@@ -1,11 +1,17 @@
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 20px;
   background-color: #333;
   color: white;
-  border-bottom: 2px solid #444; /* Légère bordure pour un effet de séparation */
+  border-bottom: 2px solid #444;
+  transition: background-color 0.3s ease;
+}
+
+.header:hover {
+  background-color: #444; /* Légère modification à l'effet de survol */
 }
 
 .logo {
@@ -19,9 +25,10 @@
 }
 
 .logo h1 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .buttons-container {
@@ -33,30 +40,38 @@
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .buttons-container button:hover {
   background-color: #0056b3;
+  transform: scale(1.05); /* Effet de survol qui agrandit légèrement le bouton */
 }
 
+/* Responsivité */
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px 15px;
+    padding: 15px 10px;
   }
 
   .logo h1 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    text-align: center;
   }
 
   .buttons-container {
     width: 100%;
     justify-content: space-between;
     margin-top: 10px;
+  }
+
+  .buttons-container button {
+    padding: 10px 18px;
+    font-size: 14px;
   }
 }

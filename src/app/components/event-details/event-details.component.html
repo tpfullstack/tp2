@@ -15,7 +15,11 @@
           Date de fin :
           <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
         </label>
-  
+        <div class="modal-actions">
+          <button type="submit" class="btn-details">Mettre à jour</button>
+          <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
+        </div>
+        <h2>Association des artistes</h2>
         <!-- Gestion des artistes associés -->
         <label>
           Artistes associés :
@@ -36,10 +40,7 @@
           <button type="button" (click)="attachArtist(selectedEvent.id, selectedArtistId)">Associer</button>
         </label>
   
-        <div class="modal-actions">
-          <button type="submit" class="btn-details">Mettre à jour</button>
-          <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
-        </div>
+        
       </form>
     </div>
   </div>

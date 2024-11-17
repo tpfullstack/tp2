@@ -1,15 +1,16 @@
-<button class="btn-add" (click)="navigateToAddArtist()">Créer un artiste...</button>
-
-
-<!-- Autres éléments de la liste d'artistes -->
-
-
 <div class="artist-table-container">
+  <!-- Conteneur pour le titre et le bouton -->
+  <div class="header-container">
+    <h2 class="title">Liste d'artistes</h2>
+    <button class="btn-add" (click)="navigateToAddArtist()">Créer un artiste...</button>
+  </div>
+
+  <!-- Tableau des artistes -->
   <table class="artist-table">
     <thead>
       <tr>
         <th>Artiste</th>
-        <th>Événements</th> <!-- Nouvelle colonne pour les événements -->
+        <th>Événements</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -23,13 +24,13 @@
         </td>
         <td>
           <button (click)="navigateToDetail(artist.id)" class="btn-details">Détails</button>
-
           <button (click)="deleteArtist(artist.id)" class="btn-delete">Supprimer</button>
         </td>
       </tr>
     </tbody>
   </table>
 
+  <!-- Pagination -->
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
