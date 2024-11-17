@@ -145,4 +145,5 @@ export class EventListComponent implements OnInit {
       this.loadEvents();
     }
   }
+  
 }

@@ -74,21 +74,6 @@ export class ArtistsListComponent implements OnInit {
     }
   }
 
-  // Supprimer un artiste
-  deleteArtist(artistId: string): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet artiste ?')) {
-      this.artistService.deleteArtistById(artistId).subscribe(
-        () => {
-          console.log('Artiste supprimé avec succès');
-          this.loadArtists(); // Recharge la liste après suppression
-        },
-        (error) => {
-          console.error('Erreur lors de la suppression de l\'artiste', error);
-        }
-      );
-    }
-  }
-
   // Naviguer vers la page d'ajout d'un nouvel artiste
   navigateToAddArtist(): void {
     this.router.navigate(['/create-artist']); // Redirige vers la page d'ajout
@@ -110,4 +95,13 @@ export class ArtistsListComponent implements OnInit {
       }
     );
   }
+  navigateToDetail(artistId: string): void {
+    this.router.navigate([`/artist/${artistId}`]);
+  }
+  deleteArtist(artistId: string): void {
+    this.artistService.deleteArtistById(artistId).subscribe(() => {
+      this.loadArtists(); // Méthode pour recharger la liste des artistes après suppression
+    });
+  }
+  
 }

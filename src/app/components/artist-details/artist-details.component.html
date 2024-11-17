@@ -1,0 +1,14 @@
+<div *ngIf="artist">
+    <h2>Détails de l'artiste</h2>
+    <form (ngSubmit)="updateArtist()">
+      <label>
+        Nom de l'artiste :
+        <input type="text" [(ngModel)]="artist.label" name="label" required />
+      </label>
+      <div>
+        <button type="submit" class="btn-details">Mettre à jour</button>
+        <button class="btn-delete" (click)="navigateToArtists()">Annuler</button>
+      </div>
+    </form>
+  </div>
+  
