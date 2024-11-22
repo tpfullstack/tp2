@@ -1,52 +1,61 @@
-<form (ngSubmit)="createEvent()" #eventForm="ngForm">
-  <div>
-    <label for="label">Label :</label>
-    <input
-      type="text"
-      id="label"
-      [(ngModel)]="newEvent.label"
-      name="label"
-      required
-    />
+<!-- Formulaire de création d'événement -->
+<div *ngIf="newEvent" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-modal" (click)="closeModal()">&times;</button>
+    <h2>Créer un nouvel événement</h2>
+    <form (ngSubmit)="createEvent()" #eventForm="ngForm">
+      <div>
+        <label for="label">Label :</label>
+        <input
+          type="text"
+          id="label"
+          [(ngModel)]="newEvent.label"
+          name="label"
+          required
+        />
+      </div>
+      <div>
+        <label for="startDate">Date de début :</label>
+        <input
+          type="date"
+          id="startDate"
+          [(ngModel)]="newEvent.startDate"
+          name="startDate"
+          required
+        />
+      </div>
+      <div>
+        <label for="endDate">Date de fin :</label>
+        <input
+          type="date"
+          id="endDate"
+          [(ngModel)]="newEvent.endDate"
+          name="endDate"
+          required
+        />
+      </div>
+      <div>
+        <label for="artists">Artistes :</label>
+        <select
+          id="artists"
+          [(ngModel)]="selectedArtistIds"
+          name="artists"
+          multiple
+          required
+        >
+          <option value="" disabled>-- Sélectionnez des artistes --</option>
+          <option *ngFor="let artist of artists" [value]="artist.id">
+            {{ artist.label }}
+          </option>
+        </select>
+        <div *ngIf="artists.length === 0" style="color: red;">
+          Aucun artiste disponible. Vérifiez la récupération des données.
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-details" [disabled]="!eventForm.form.valid">Créer</button>
+        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
+      </div>
+    </form>
   </div>
-  <div>
-    <label for="startDate">Date de début :</label>
-    <input
-      type="date"
-      id="startDate"
-      [(ngModel)]="newEvent.startDate"
-      name="startDate"
-      required
-    />
-  </div>
-  <div>
-    <label for="endDate">Date de fin :</label>
-    <input
-      type="date"
-      id="endDate"
-      [(ngModel)]="newEvent.endDate"
-      name="endDate"
-      required
-    />
-  </div>
-  <div>
-    <label for="artists">Artistes :</label>
-    <select
-      id="artists"
-      [(ngModel)]="selectedArtistIds"
-      name="artists"
-      multiple
-      required
-    >
-      <option value="" disabled>-- Sélectionnez des artistes --</option>
-      <option *ngFor="let artist of artists" [value]="artist.id">
-        {{ artist.label }}
-      </option>
-    </select>
-    <!-- Affichage pour aider au débogage -->
-    <div *ngIf="artists.length === 0" style="color: red;">
-      Aucun artiste disponible. Vérifiez la récupération des données.
-    </div>
-  </div>
-  <button type="submit" [disabled]="!eventForm.form.valid">Créer</button>
-</form>
+</div>

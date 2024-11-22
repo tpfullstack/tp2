@@ -80,7 +80,10 @@ export class CreateEventComponent implements OnInit {
       }
     );
   }
-
+  closeModal(): void {
+    this.router.navigate(['/events']); // Ou redirection vers un autre chemin si nécessaire
+  }
+  
   // Convertir les dates au format API (yyyy-MM-dd)
   convertDateToApiFormat(date: string): string {
     const d = new Date(date);
