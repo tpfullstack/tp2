@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { ArtistService } from '../../services/artist.service';
-import { Router, ActivatedRoute } from '@angular/router';  // Ajout du Router et ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router'; 
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 
@@ -13,95 +13,50 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./event-details.component.css']
 })
 export class EventDetailComponent implements OnInit {
-  selectedEvent: any = null;
-  availableArtists: any[] = [];  // Liste des artistes disponibles pour l'ajout
-  selectedArtistId: string = '';  // ID de l'artiste à associer
-  eventId: string = '';  // ID de l'événement sélectionné
+  selectedEvent: any = null; // Événement sélectionné
+  availableArtists: any[] = []; // Liste des artistes disponibles
+  eventId: string = ''; // ID de l'événement
 
   constructor(
     private eventService: EventService,
     private artistService: ArtistService,
     private router: Router,
-    private route: ActivatedRoute  // Récupérer l'ID de l'événement depuis l'URL
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.eventId = params['id'];  // Récupérer l'ID de l'événement depuis l'URL
-      this.loadEventDetails(this.eventId);
+      this.eventId = params['id'];
+      this.loadEventDetails(this.eventId); // Charger les détails de l'événement
     });
-    this.loadAvailableArtists();  // Charger les artistes disponibles au démarrage
+    this.loadAvailableArtists(); // Charger la liste des artistes
   }
 
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
-      (data) => {
-        this.selectedEvent = data; 
-        console.log('Détails de l\'événement récupérés:', this.selectedEvent);
-  
-        // Vérifier si la date est déjà au format correct
-        if (this.selectedEvent) {
-          // Si les dates sont déjà au format yyyy-MM-dd, pas besoin de les convertir
-          this.selectedEvent.startDate = this.selectedEvent.startDate || '';
-          this.selectedEvent.endDate = this.selectedEvent.endDate || '';
-        }
-      },
+      (data) => this.selectedEvent = data,
       (error) => {
-        console.error('Erreur lors de la récupération des détails de l\'événement :', error);
-        alert('Impossible de récupérer les détails de l\'événement.');
+        console.error('Erreur :', error);
+        alert('Impossible de récupérer les détails.');
       }
     );
   }
-  
-  convertDateToApiFormat(date: string): string {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-  
 
   loadAvailableArtists(): void {
     this.artistService.getArtists(0, 100).subscribe(
       (data) => {
         this.availableArtists = data.content || [];
+        console.log('Artistes disponibles chargés:', this.availableArtists);
       },
       (error) => {
         console.error('Erreur lors de la récupération des artistes disponibles', error);
+        alert('Impossible de charger les artistes disponibles.');
       }
     );
   }
 
-  attachArtist(eventId: string, artistId: string): void {
-    if (!artistId) {
-      alert('Veuillez sélectionner un artiste à associer.');
-      return;
-    }
-    this.eventService.linkArtistToEvent(eventId, artistId).subscribe({
-      next: () => {
-        alert('Artiste associé avec succès.');
-        this.loadEventDetails(eventId); // Recharge les détails de l'événement
-      },
-      error: (err) => {
-        console.error('Erreur lors de l\'association de l\'artiste :', err);
-        alert('Impossible d\'associer l\'artiste.');
-      },
-    });
-  }
-
-  detachArtist(eventId: string, artistId: string): void {
-    if (artistId) {
-      this.eventService.unlinkArtistFromEvent(eventId, artistId).subscribe(
-        () => {
-          console.log('Artiste détaché de l\'événement');
-          this.loadEventDetails(eventId);  // Recharge les détails de l'événement après détachement
-        },
-        (error) => {
-          console.error('Erreur lors du détachement de l\'artiste', error);
-        }
-      );
-    }
+  isArtistAssociated(artistId: string): boolean {
+    return this.selectedEvent?.artists?.some((a: any) => a.id === artistId) || false;
   }
 
   updateEvent(): void {
@@ -118,10 +73,33 @@ export class EventDetailComponent implements OnInit {
       );
     }
   }
+  
+  toggleAssociation(artist: any): void {
+    artist.associated = !artist.associated;
+  
+    if (artist.associated) {
+      this.attachArtist(this.eventId, artist.id);
+    } else {
+      this.detachArtist(this.eventId, artist.id);
+    }
+  }
+
+  attachArtist(eventId: string, artistId: string): void {
+    this.eventService.linkArtistToEvent(eventId, artistId).subscribe({
+      next: () => console.log(`Artiste ${artistId} associé.`),
+      error: (err) => alert('Association échouée.')
+    });
+  }
+
+  detachArtist(eventId: string, artistId: string): void {
+    this.eventService.unlinkArtistFromEvent(eventId, artistId).subscribe({
+      next: () => console.log(`Artiste ${artistId} dissocié.`),
+      error: (err) => alert('Dissociation échouée.')
+    });
+  }
 
   closeModal(): void {
-    this.selectedEvent = null; // Ferme la modal
-    this.router.navigate(['/events']);  // Redirige vers la liste des événements
+    this.selectedEvent = null;
+    this.router.navigate(['/events']);
   }
-  
 }

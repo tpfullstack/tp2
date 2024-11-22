@@ -1,47 +1,35 @@
-<!-- Modal pour Détails de l'événement -->
 <div *ngIf="selectedEvent" class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h2>Détails de l'événement</h2>
-      <form (ngSubmit)="updateEvent()">
-        <label>
-          Nom de l'événement :
-          <input type="text" [(ngModel)]="selectedEvent.label" name="label" required />
-        </label>
-        <label>
-          Date de début :
-          <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required />
-        </label>
-        <label>
-          Date de fin :
-          <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
-        </label>
-        <div class="modal-actions">
-          <button type="submit" class="btn-details">Mettre à jour</button>
-          <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
-        </div>
-        <h2>Association des artistes</h2>
-        <!-- Gestion des artistes associés -->
-        <label>
-          Artistes associés :
-          <ul>
-            <li *ngFor="let artist of selectedEvent.artists">
-              {{ artist.label }} 
-              <button type="button" (click)="detachArtist(selectedEvent.id, artist.id)">Détacher</button>
-            </li>
-          </ul>
-        </label>
-  
-        <!-- Sélectionner de nouveaux artistes à associer -->
-        <label>
-          Ajouter un artiste :
-          <select [(ngModel)]="selectedArtistId" name="newArtist">
-            <option *ngFor="let artist of availableArtists" [value]="artist.id">{{ artist.label }}</option>
-          </select>
-          <button type="button" (click)="attachArtist(selectedEvent.id, selectedArtistId)">Associer</button>
-        </label>
-  
-        
-      </form>
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-modal" (click)="closeModal()">&times;</button>
+    <h2>Détails de l'événement</h2>
+    <form (ngSubmit)="updateEvent()">
+      <label>
+        Nom de l'événement :
+        <input type="text" [(ngModel)]="selectedEvent.label" name="label" required />
+      </label>
+      <label>
+        Date de début :
+        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required />
+      </label>
+      <label>
+        Date de fin :
+        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn-details">Mettre à jour</button>
+        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
+      </div>
+    </form>
+    <h3>Association des artistes</h3>
+    <div *ngFor="let artist of availableArtists" class="artist-item">
+      <span>{{ artist.label }}</span>
+      <button
+        (click)="toggleAssociation(artist)"
+        [class.associate]="!artist.associated"
+        [class.dissociate]="artist.associated"
+      >
+        {{ artist.associated ? 'Dissocier' : 'Associer' }}
+      </button>
     </div>
   </div>
-  
+</div>
