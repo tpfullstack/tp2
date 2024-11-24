@@ -2,7 +2,7 @@
   <!-- Conteneur pour le titre et le bouton -->
   <div class="header-container">
     <h2 class="title">Liste d'artistes</h2>
-    <button class="btn-add" (click)="navigateToAddArtist()">Créer un artiste</button>
+    <button class="btn-add" (click)="navigateToAddArtist()">Ajouter un artiste</button>
   </div>
 
   <!-- Tableau des artistes -->
@@ -37,19 +37,3 @@
   </div>
 </div>
 
-<!-- Modal pour les détails -->
-<div *ngIf="selectedArtist" class="modal-overlay" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2>Détails de l'artiste</h2>
-    <form (ngSubmit)="updateArtist()">
-      <label>
-        Nom de l'artiste :
-        <input type="text" [(ngModel)]="selectedArtist.label" name="label" required />
-      </label>
-      <div class="modal-actions">
-        <button type="submit" class="btn-details">Mettre à jour</button>
-        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
-      </div>
-    </form>
-  </div>
-</div>

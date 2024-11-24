@@ -79,4 +79,10 @@
   .modal-actions .btn-delete:hover {
     background-color: #c82333; /* Couleur au survol */
   }
+  .error-message {
+    color: #dc3545; /* Rouge pour les erreurs */
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
   

@@ -30,7 +30,7 @@ export const routes: Route[] = [
   },
   {
     path: '',
-    redirectTo: '/create-event',
+    redirectTo: '/artists',
     pathMatch: 'full'  // Redirection vers la route par défaut
   }
 ];

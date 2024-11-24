@@ -2,13 +2,29 @@
 <div *ngIf="artist" class="modal-overlay" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h2>Détails de l'artiste</h2>
-    <form (ngSubmit)="updateArtist()">
+    <form (ngSubmit)="updateArtist()" #artistForm="ngForm">
       <label>
         Nom de l'artiste :
-        <input type="text" [(ngModel)]="artist.label" name="label" required />
+        <input
+          type="text"
+          [(ngModel)]="artist.label"
+          name="label"
+          required
+          minlength="3"
+          #labelInput="ngModel" />
       </label>
+      <!-- Message d'erreur -->
+      <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
+        <small *ngIf="labelInput.errors?.['required']">Le nom est obligatoire.</small>
+        <small *ngIf="labelInput.errors?.['minlength']">
+          Le nom doit contenir au moins 3 caractères.
+        </small>
+      </div>
       <div class="modal-actions">
-        <button type="submit" class="btn-details">Mettre à jour</button>
+        <button
+          type="submit"
+          class="btn-details"
+          [disabled]="artistForm.invalid">Mettre à jour</button>
         <button type="button" class="btn-delete" (click)="navigateToArtists()">Annuler</button>
       </div>
     </form>

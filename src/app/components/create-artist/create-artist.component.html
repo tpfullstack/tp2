@@ -1,22 +1,31 @@
-<div class="modal-overlay" (click)="closeModal()">
+<!-- Modal pour les détails de l'artiste -->
+<div *ngIf="artist" class="modal-overlay" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <button class="close-modal" (click)="closeModal()">&times;</button>
-    <h2>Créer un Artiste</h2>
-    <form (ngSubmit)="createArtist()">
-      <div class="form-group">
-        <label for="label">Nom de l'artiste :</label>
+    <h2>Détails de l'artiste</h2>
+    <form (ngSubmit)="createArtist()" #artistForm="ngForm">
+      <label>
+        Nom de l'artiste :
         <input
           type="text"
-          id="label"
           [(ngModel)]="artist.label"
           name="label"
           required
-        />
+          minlength="3"
+          #labelInput="ngModel" />
+      </label>
+      <!-- Message d'erreur -->
+      <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
+        <small *ngIf="labelInput.errors?.['required']">Le nom est obligatoire.</small>
+        <small *ngIf="labelInput.errors?.['minlength']">
+          Le nom doit contenir au moins 3 caractères.
+        </small>
       </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn-add" [disabled]="!artist.label">Créer</button>
-        <button type="button" (click)="router.navigate(['/artists'])" class="btn-cancel">Annuler</button>
+      <div class="modal-actions">
+        <button
+          type="submit"
+          class="btn-add"
+          [disabled]="artistForm.invalid">Créer</button>
+        <button type="button" class="btn-delete" (click)="navigateToArtists()">Annuler</button>
       </div>
     </form>
   </div>
