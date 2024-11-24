@@ -2,34 +2,80 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button class="close-modal" (click)="closeModal()">&times;</button>
     <h2>Détails de l'événement</h2>
-    <form (ngSubmit)="updateEvent()">
-      <label>
+    <form (ngSubmit)="updateEvent()" #eventForm="ngForm">
+
+      <!-- Label -->
+      <label for="label">
         Nom de l'événement :
-        <input type="text" [(ngModel)]="selectedEvent.label" name="label" required />
+        <input
+          type="text"
+          [(ngModel)]="selectedEvent.label"
+          name="label"
+          required
+          minlength="3"
+          #labelInput="ngModel"
+        />
+        <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
+          <small *ngIf="labelInput.errors?.['required']">Le label est obligatoire.</small>
+          <small *ngIf="labelInput.errors?.['minlength']">Le label doit contenir au moins 3 caractères.</small>
+        </div>
       </label>
-      <label>
+
+      <!-- Date de début -->
+      <label for="startDate">
         Date de début :
-        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required />
+        <input
+          type="date"
+          [(ngModel)]="selectedEvent.startDate"
+          name="startDate"
+          required
+          #startDateInput="ngModel"
+        />
+        <div *ngIf="startDateInput.invalid && (startDateInput.dirty || startDateInput.touched)" class="error-message">
+          <small *ngIf="startDateInput.errors?.['required']">La date de début est obligatoire.</small>
+        </div>
       </label>
-      <label>
+
+      <!-- Date de fin -->
+      <label for="endDate">
         Date de fin :
-        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
+        <input
+          type="date"
+          [(ngModel)]="selectedEvent.endDate"
+          name="endDate"
+          required
+          #endDateInput="ngModel"
+        />
+        <div *ngIf="endDateInput.invalid && (endDateInput.dirty || endDateInput.touched)" class="error-message">
+          <small *ngIf="endDateInput.errors?.['required']">La date de fin est obligatoire.</small>
+        </div>
       </label>
+
+      <!-- Erreur si date de fin avant la date de début -->
+      <div *ngIf="selectedEvent.startDate && selectedEvent.endDate && selectedEvent.startDate > selectedEvent.endDate" class="error-message">
+        La date de fin doit être après la date de début.
+      </div>
+
+      <!-- Sélection des artistes -->
+      <div>
+        <h3>Association des artistes</h3>
+        <div *ngFor="let artist of availableArtists" class="artist-item">
+          <span>{{ artist.label }}</span>
+          <button
+            type="button"
+            (click)="toggleAssociation(artist)"
+            [class.associate]="!artist.associated"
+            [class.dissociate]="artist.associated"
+          >
+            {{ artist.associated ? 'Dissocier' : 'Associer' }}
+          </button>
+        </div>
+      </div>
+
       <div class="modal-actions">
-        <button type="submit" class="btn-details">Mettre à jour</button>
+        <button type="submit" class="btn-details" [disabled]="!eventForm.form.valid || selectedEvent.startDate > selectedEvent.endDate">Mettre à jour</button>
         <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
     </form>
-    <h3>Association des artistes</h3>
-    <div *ngFor="let artist of availableArtists" class="artist-item">
-      <span>{{ artist.label }}</span>
-      <button
-        (click)="toggleAssociation(artist)"
-        [class.associate]="!artist.associated"
-        [class.dissociate]="artist.associated"
-      >
-        {{ artist.associated ? 'Dissocier' : 'Associer' }}
-      </button>
-    </div>
   </div>
 </div>

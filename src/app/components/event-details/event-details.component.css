@@ -139,3 +139,9 @@ button.dissociate:hover {
 .close-modal:hover {
   color: #333;
 }
+.error-message {
+  color: #dc3545; /* Rouge pour les erreurs */
+  font-size: 12px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}

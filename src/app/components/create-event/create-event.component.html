@@ -4,6 +4,8 @@
     <button class="close-modal" (click)="closeModal()">&times;</button>
     <h2>Créer un nouvel événement</h2>
     <form (ngSubmit)="createEvent()" #eventForm="ngForm">
+      
+      <!-- Label -->
       <div>
         <label for="label">Label :</label>
         <input
@@ -12,8 +14,17 @@
           [(ngModel)]="newEvent.label"
           name="label"
           required
+          minlength="3"
+          #labelInput="ngModel"
         />
+        <!-- Message d'erreur pour le label -->
+        <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
+          <small *ngIf="labelInput.errors?.['required']">Le label est obligatoire.</small>
+          <small *ngIf="labelInput.errors?.['minlength']">Le label doit contenir au moins 3 caractères.</small>
+        </div>
       </div>
+
+      <!-- Date de début -->
       <div>
         <label for="startDate">Date de début :</label>
         <input
@@ -22,8 +33,15 @@
           [(ngModel)]="newEvent.startDate"
           name="startDate"
           required
+          #startDateInput="ngModel"
         />
+        <!-- Message d'erreur pour la date de début -->
+        <div *ngIf="startDateInput.invalid && (startDateInput.dirty || startDateInput.touched)" class="error-message">
+          <small *ngIf="startDateInput.errors?.['required']">La date de début est obligatoire.</small>
+        </div>
       </div>
+
+      <!-- Date de fin -->
       <div>
         <label for="endDate">Date de fin :</label>
         <input
@@ -32,28 +50,39 @@
           [(ngModel)]="newEvent.endDate"
           name="endDate"
           required
+          #endDateInput="ngModel"
         />
-      </div>
-      <div>
-        <label for="artists">Artistes :</label>
-        <select
-          id="artists"
-          [(ngModel)]="selectedArtistIds"
-          name="artists"
-          multiple
-          required
-        >
-          <option value="" disabled>-- Sélectionnez des artistes --</option>
-          <option *ngFor="let artist of artists" [value]="artist.id">
-            {{ artist.label }}
-          </option>
-        </select>
-        <div *ngIf="artists.length === 0" style="color: red;">
-          Aucun artiste disponible. Vérifiez la récupération des données.
+        <!-- Message d'erreur pour la date de fin -->
+        <div *ngIf="endDateInput.invalid && (endDateInput.dirty || endDateInput.touched)" class="error-message">
+          <small *ngIf="endDateInput.errors?.['required']">La date de fin est obligatoire.</small>
         </div>
       </div>
+
+      <!-- Validation que la date de fin est après la date de début -->
+      <div *ngIf="newEvent.startDate && newEvent.endDate && newEvent.startDate > newEvent.endDate" class="error-message">
+        La date de fin doit être après la date de début.
+      </div>
+
+      <!-- Sélection des artistes -->
+<div>
+  <label for="artists">Artistes :</label>
+  <select
+  id="artists"
+  [(ngModel)]="selectedArtistIds"
+  name="artists"
+  multiple
+  #artistsInput="ngModel"
+>
+  <option value="" disabled>-- Sélectionnez des artistes --</option>
+  <option *ngFor="let artist of artists" [value]="artist.id">
+    {{ artist.label }}
+  </option>
+</select>
+
+</div>
+
       <div class="modal-actions">
-        <button type="submit" class="btn-details" [disabled]="!eventForm.form.valid">Créer</button>
+        <button type="submit" class="btn-details" [disabled]="!eventForm.form.valid || newEvent.startDate > newEvent.endDate">Créer</button>
         <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
     </form>

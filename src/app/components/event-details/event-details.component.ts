@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { ArtistService } from '../../services/artist.service';
-import { Router, ActivatedRoute } from '@angular/router'; 
-import { FormsModule } from '@angular/forms'; 
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -34,7 +34,17 @@ export class EventDetailComponent implements OnInit {
 
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
-      (data) => this.selectedEvent = data,
+      (data) => {
+        this.selectedEvent = data;
+
+        // Normaliser les dates au format yyyy-MM-dd
+        this.selectedEvent.startDate = this.normalizeDate(this.selectedEvent.startDate);
+        this.selectedEvent.endDate = this.normalizeDate(this.selectedEvent.endDate);
+        
+        // Convertir les dates en objets Date pour une meilleure comparaison
+        this.selectedEvent.startDate = new Date(this.selectedEvent.startDate);
+        this.selectedEvent.endDate = new Date(this.selectedEvent.endDate);
+      },
       (error) => {
         console.error('Erreur :', error);
         alert('Impossible de récupérer les détails.');
@@ -55,13 +65,32 @@ export class EventDetailComponent implements OnInit {
     );
   }
 
-  isArtistAssociated(artistId: string): boolean {
-    return this.selectedEvent?.artists?.some((a: any) => a.id === artistId) || false;
+  normalizeDate(date: string): string {
+    if (!date) return '';
+    return date.split('T')[0]; // Garder uniquement la partie yyyy-MM-dd
   }
 
   updateEvent(): void {
+    console.log('Start Date:', this.selectedEvent.startDate);
+    console.log('End Date:', this.selectedEvent.endDate);
+
+    // Validation des dates
+    if (this.selectedEvent.startDate && this.selectedEvent.endDate) {
+      // Comparer les dates en tant qu'objets Date
+      if (this.selectedEvent.startDate > this.selectedEvent.endDate) {
+        alert('La date de fin doit être après la date de début.');
+        return;
+      }
+    }
+
     if (this.selectedEvent) {
-      this.eventService.updateEvent(this.selectedEvent.id, this.selectedEvent).subscribe(
+      const updatedEvent = {
+        ...this.selectedEvent,
+        startDate: this.convertDateToApiFormat(this.selectedEvent.startDate), // Date normalisée
+        endDate: this.convertDateToApiFormat(this.selectedEvent.endDate) // Date normalisée
+      };
+
+      this.eventService.updateEvent(this.eventId, updatedEvent).subscribe(
         (response) => {
           console.log('Événement mis à jour avec succès', response);
           this.selectedEvent = null;  // Ferme la vue des détails après mise à jour
@@ -69,14 +98,15 @@ export class EventDetailComponent implements OnInit {
         },
         (error) => {
           console.error('Erreur lors de la mise à jour de l\'événement', error);
+          alert('Erreur lors de la mise à jour de l\'événement.');
         }
       );
     }
   }
-  
+
   toggleAssociation(artist: any): void {
     artist.associated = !artist.associated;
-  
+
     if (artist.associated) {
       this.attachArtist(this.eventId, artist.id);
     } else {
@@ -96,6 +126,15 @@ export class EventDetailComponent implements OnInit {
       next: () => console.log(`Artiste ${artistId} dissocié.`),
       error: (err) => alert('Dissociation échouée.')
     });
+  }
+
+  // Convertir les dates au format API (yyyy-MM-dd)
+  convertDateToApiFormat(date: Date): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   closeModal(): void {

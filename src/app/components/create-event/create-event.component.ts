@@ -47,7 +47,6 @@ export class CreateEventComponent implements OnInit {
     );
   }
 
-  // Créer un événement
   createEvent(): void {
     this.newEvent.startDate = this.convertDateToApiFormat(this.newEvent.startDate);
     this.newEvent.endDate = this.convertDateToApiFormat(this.newEvent.endDate);
@@ -80,6 +79,7 @@ export class CreateEventComponent implements OnInit {
       }
     );
   }
+
   closeModal(): void {
     this.router.navigate(['/events']); // Ou redirection vers un autre chemin si nécessaire
   }
