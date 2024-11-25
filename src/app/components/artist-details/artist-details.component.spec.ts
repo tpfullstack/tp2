@@ -10,7 +10,7 @@ describe('ArtistDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ArtistDetailComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ArtistDetailComponent);
     component = fixture.componentInstance;

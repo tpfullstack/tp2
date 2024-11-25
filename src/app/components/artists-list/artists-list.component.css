@@ -1,20 +1,18 @@
-/* Conteneur principal du tableau */
 .artist-table-container {
   display: flex;
-  flex-direction: column;  /* Organisation verticale pour le tableau et la pagination */
-  align-items: center;     /* Centrage horizontal de tout */
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   padding-top: 20px;
 }
 
-/* Conteneur pour le titre et le bouton "Créer un artiste" */
 .header-container {
   display: flex;
-  justify-content: space-between; /* Espacement horizontal entre le titre et le bouton */
-  align-items: center;            /* Alignement vertical centré */
-  width: 90%;                     /* Largeur maximale égale au tableau */
-  max-width: 1200px;              /* Limite la largeur à 1200px */
-  margin-bottom: 20px;            /* Espacement entre le titre et le tableau */
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin-bottom: 20px;
 }
 
 .title {
@@ -39,19 +37,19 @@
   background-color: #0056b3;
 }
 
-/* Tableau des artistes */
 .artist-table {
-  width: 90%;                  /* Largeur à 90% du conteneur */
-  max-width: 1200px;            /* Largeur maximale de 1200px */
-  border-collapse: collapse;   /* Fusion des bordures pour un tableau plus net */
+  width: 90%;
+  max-width: 1200px;
+  border-collapse: collapse;
   background: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);  /* Ombre légère pour un effet de profondeur */
-  border-radius: 10px;         /* Coins arrondis */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 20px;         /* Espacement entre le tableau et la pagination */
+  margin-bottom: 20px;
 }
 
-.artist-table th, .artist-table td {
+.artist-table th,
+.artist-table td {
   padding: 15px;
   border: 1px solid #ddd;
   text-align: left;
@@ -74,10 +72,9 @@
   cursor: pointer;
 }
 
-/* Pagination */
 .pagination {
   text-align: center;
-  margin-top: 20px; /* Assure que la pagination soit en bas du tableau */
+  margin-top: 20px;
 }
 
 .pagination button {
@@ -100,7 +97,6 @@
   cursor: not-allowed;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -114,7 +110,6 @@
   z-index: 1000;
 }
 
-/* Boutons Détails et Supprimer dans le tableau */
 .artist-table td button {
   padding: 8px 15px;
   font-size: 14px;
@@ -124,7 +119,6 @@
   transition: background-color 0.3s ease;
 }
 
-/* Style du bouton Détails */
 .btn-details {
   background-color: #2341ec;
   color: white;
@@ -134,27 +128,24 @@
   background-color: #1a30b3;
 }
 
-/* Style du bouton Supprimer */
 .btn-delete {
   background-color: #ff4d4f;
   color: white;
-  margin-left: 10px; /* Espace entre les boutons */
+  margin-left: 10px;
 }
 
 .btn-delete:hover {
   background-color: #d9363e;
 }
 
-/* Désactivation des boutons */
 button[disabled] {
   background-color: #e0e0e0;
   cursor: not-allowed;
 }
 
-/* Si nécessaire, ajout de styles spécifiques pour mobile */
 @media (max-width: 768px) {
   .artist-table td button {
-    font-size: 12px;  /* Réduit la taille du texte pour les petits écrans */
-    padding: 6px 10px;  /* Réduit le padding pour économiser de l'espace */
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }

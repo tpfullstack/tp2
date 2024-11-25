@@ -1,11 +1,9 @@
 <div class="event-table-container">
-  <!-- Conteneur Titre et Bouton -->
   <div class="event-table-header">
     <h1>Liste des événements</h1>
     <button class="btn-add" (click)="navigateToAddEvent()">Ajouter un événement</button>
   </div>
 
-  <!-- Table des événements -->
   <table class="event-table">
     <thead>
       <tr>
@@ -36,14 +34,12 @@
     </tbody>
   </table>
 
-  <!-- Pagination -->
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
   </div>
 </div>
 
-<!-- Modal -->
 <div *ngIf="selectedEvent" class="modal-overlay" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h2>Détails de l'événement</h2>
@@ -61,18 +57,16 @@
         <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required />
       </label>
 
-      <!-- Gestion des artistes associés -->
       <label>
         Artistes associés :
         <ul>
           <li *ngFor="let artist of selectedEvent.artists">
-            {{ artist.label }} 
+            {{ artist.label }}
             <button type="button" (click)="detachArtist(selectedEvent.id, artist.id)">Détacher</button>
           </li>
         </ul>
       </label>
 
-      <!-- Sélectionner de nouveaux artistes à associer -->
       <label>
         Ajouter un artiste :
         <select [(ngModel)]="selectedArtistId" name="newArtist">

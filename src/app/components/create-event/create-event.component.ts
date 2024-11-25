@@ -19,27 +19,25 @@ export class CreateEventComponent implements OnInit {
     startDate: '',
     endDate: ''
   };
-  artists: any[] = []; // Liste des artistes
-  selectedArtistIds: string[] = []; // Tableau des IDs des artistes sélectionnés
+  artists: any[] = [];
+  selectedArtistIds: string[] = [];
 
   constructor(
     private eventService: EventService,
     private artistService: ArtistService,
     private router: Router,
-    private cdr: ChangeDetectorRef // Détection des changements
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    this.loadArtists(); // Charger la liste des artistes au démarrage
+    this.loadArtists();
   }
-
-  // Charger les artistes
   loadArtists(): void {
     this.artistService.getArtists(0, 100).subscribe(
       (data) => {
         console.log('Données artistes récupérées :', data.content);
-        this.artists = data.content || []; // Protéger contre null/undefined
-        this.cdr.detectChanges(); // Forcer la mise à jour de la vue
+        this.artists = data.content || [];
+        this.cdr.detectChanges();
       },
       (error) => {
         console.error('Erreur lors de la récupération des artistes', error);
@@ -55,7 +53,6 @@ export class CreateEventComponent implements OnInit {
       (eventResponse) => {
         console.log('Événement créé avec succès', eventResponse);
 
-        // Associer les artistes sélectionnés à l'événement
         if (this.selectedArtistIds.length > 0) {
           console.log('Association des artistes avec les IDs :', this.selectedArtistIds);
           this.selectedArtistIds.forEach((artistId) => {
@@ -69,9 +66,9 @@ export class CreateEventComponent implements OnInit {
             );
           });
 
-          this.router.navigate(['/events']); // Redirection après association
+          this.router.navigate(['/events']);
         } else {
-          this.router.navigate(['/events']); // Redirection sans association
+          this.router.navigate(['/events']);
         }
       },
       (error) => {
@@ -81,9 +78,9 @@ export class CreateEventComponent implements OnInit {
   }
 
   closeModal(): void {
-    this.router.navigate(['/events']); // Ou redirection vers un autre chemin si nécessaire
+    this.router.navigate(['/events']);
   }
-  
+
   // Convertir les dates au format API (yyyy-MM-dd)
   convertDateToApiFormat(date: string): string {
     const d = new Date(date);

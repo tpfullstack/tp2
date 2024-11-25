@@ -1,11 +1,9 @@
 <div class="artist-table-container">
-  <!-- Conteneur pour le titre et le bouton -->
   <div class="header-container">
     <h2 class="title">Liste d'artistes</h2>
     <button class="btn-add" (click)="navigateToAddArtist()">Ajouter un artiste</button>
   </div>
 
-  <!-- Tableau des artistes -->
   <table class="artist-table">
     <thead>
       <tr>
@@ -30,10 +28,8 @@
     </tbody>
   </table>
 
-  <!-- Pagination -->
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
   </div>
 </div>
-

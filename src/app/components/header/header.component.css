@@ -1,4 +1,3 @@
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -11,7 +10,7 @@
 }
 
 .header:hover {
-  background-color: #444; /* Légère modification à l'effet de survol */
+  background-color: #444;
 }
 
 .logo {
@@ -48,10 +47,9 @@
 
 .buttons-container button:hover {
   background-color: #0056b3;
-  transform: scale(1.05); /* Effet de survol qui agrandit légèrement le bouton */
+  transform: scale(1.05);
 }
 
-/* Responsivité */
 @media (max-width: 768px) {
   .header {
     flex-direction: column;

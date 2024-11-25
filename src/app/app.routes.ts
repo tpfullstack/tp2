@@ -1,36 +1,38 @@
 import { Route } from '@angular/router';
-import { EventListComponent } from './components/event-list/event-list.component'; // Exemple
-import { ArtistsListComponent } from './components/artists-list/artists-list.component'; // Nouvelle importation
-import { CreateArtistComponent } from './components/create-artist/create-artist.component'; // Composant Create Artist
-import { EventDetailComponent } from './components/event-details/event-details.component'; // Corrigez le nom ici
-import { ArtistDetailComponent } from './components/artist-details/artist-details.component';  // Importation du composant Détail
+import { EventListComponent } from './components/event-list/event-list.component';
+import { ArtistsListComponent } from './components/artists-list/artists-list.component';
+import { CreateArtistComponent } from './components/create-artist/create-artist.component';
+import { EventDetailComponent } from './components/event-details/event-details.component';
+import { ArtistDetailComponent } from './components/artist-details/artist-details.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 export const routes: Route[] = [
   {
     path: 'events',
-    component: EventListComponent  // Exemple de route
+    component: EventListComponent
   },
   {
     path: 'create-event',
-    component: CreateEventComponent  // Exemple de route
+    component: CreateEventComponent
   },
   {
-    path: 'artists', // Route pour la liste des artistes
+    path: 'artists',
     component: ArtistsListComponent
   },
-  { path: 'events/:id', 
-  component: EventDetailComponent },
   {
-    path: 'artists/:id',  // Route pour afficher les détails d'un artiste
+    path: 'events/:id',
+    component: EventDetailComponent
+  },
+  {
+    path: 'artists/:id',
     component: ArtistDetailComponent
   },
   {
     path: 'create-artist',
-    component: CreateArtistComponent  // Route vers le composant Create Artist
+    component: CreateArtistComponent
   },
   {
     path: '',
     redirectTo: '/artists',
-    pathMatch: 'full'  // Redirection vers la route par défaut
+    pathMatch: 'full'
   }
 ];

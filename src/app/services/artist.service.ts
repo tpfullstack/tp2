@@ -7,11 +7,10 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ArtistService {
-  private apiUrl = 'http://localhost:8080/artists'; // L'URL de l'API
+  private apiUrl = 'http://localhost:8080/artists';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  // Récupérer une liste paginée d'artistes
   getArtists(page: number, size: number, sort?: string[]): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -30,7 +29,6 @@ export class ArtistService {
     );
   }
 
-  // Récupérer un artiste par ID
   getArtistById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       tap((data) => {
@@ -39,7 +37,6 @@ export class ArtistService {
     );
   }
 
-  // Créer un nouvel artiste
   createArtist(artist: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, artist).pipe(
       tap((data) => {
@@ -48,7 +45,6 @@ export class ArtistService {
     );
   }
 
-  // Mettre à jour un artiste existant
   updateArtist(id: string, artist: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, artist).pipe(
       tap((data) => {
@@ -57,7 +53,6 @@ export class ArtistService {
     );
   }
 
-  // Supprimer un artiste par ID
   deleteArtistById(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe(
       tap(() => {
@@ -66,7 +61,6 @@ export class ArtistService {
     );
   }
 
-  // Récupérer les événements liés à un artiste
   getEventsForArtist(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}/events`).pipe(
       tap((data) => {

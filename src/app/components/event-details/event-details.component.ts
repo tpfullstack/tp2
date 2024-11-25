@@ -13,23 +13,23 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./event-details.component.css']
 })
 export class EventDetailComponent implements OnInit {
-  selectedEvent: any = null; // Événement sélectionné
-  availableArtists: any[] = []; // Liste des artistes disponibles
-  eventId: string = ''; // ID de l'événement
+  selectedEvent: any = null;
+  availableArtists: any[] = [];
+  eventId: string = '';
 
   constructor(
     private eventService: EventService,
     private artistService: ArtistService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.eventId = params['id'];
-      this.loadEventDetails(this.eventId); // Charger les détails de l'événement
+      this.loadEventDetails(this.eventId);
     });
-    this.loadAvailableArtists(); // Charger la liste des artistes
+    this.loadAvailableArtists();
   }
 
   loadEventDetails(eventId: string): void {
@@ -37,11 +37,9 @@ export class EventDetailComponent implements OnInit {
       (data) => {
         this.selectedEvent = data;
 
-        // Normaliser les dates au format yyyy-MM-dd
         this.selectedEvent.startDate = this.normalizeDate(this.selectedEvent.startDate);
         this.selectedEvent.endDate = this.normalizeDate(this.selectedEvent.endDate);
-        
-        // Convertir les dates en objets Date pour une meilleure comparaison
+
         this.selectedEvent.startDate = new Date(this.selectedEvent.startDate);
         this.selectedEvent.endDate = new Date(this.selectedEvent.endDate);
       },
@@ -67,16 +65,14 @@ export class EventDetailComponent implements OnInit {
 
   normalizeDate(date: string): string {
     if (!date) return '';
-    return date.split('T')[0]; // Garder uniquement la partie yyyy-MM-dd
+    return date.split('T')[0];
   }
 
   updateEvent(): void {
     console.log('Start Date:', this.selectedEvent.startDate);
     console.log('End Date:', this.selectedEvent.endDate);
 
-    // Validation des dates
     if (this.selectedEvent.startDate && this.selectedEvent.endDate) {
-      // Comparer les dates en tant qu'objets Date
       if (this.selectedEvent.startDate > this.selectedEvent.endDate) {
         alert('La date de fin doit être après la date de début.');
         return;
@@ -86,15 +82,15 @@ export class EventDetailComponent implements OnInit {
     if (this.selectedEvent) {
       const updatedEvent = {
         ...this.selectedEvent,
-        startDate: this.convertDateToApiFormat(this.selectedEvent.startDate), // Date normalisée
-        endDate: this.convertDateToApiFormat(this.selectedEvent.endDate) // Date normalisée
+        startDate: this.convertDateToApiFormat(this.selectedEvent.startDate),
+        endDate: this.convertDateToApiFormat(this.selectedEvent.endDate)
       };
 
       this.eventService.updateEvent(this.eventId, updatedEvent).subscribe(
         (response) => {
           console.log('Événement mis à jour avec succès', response);
-          this.selectedEvent = null;  // Ferme la vue des détails après mise à jour
-          this.router.navigate(['/events']);  // Redirige vers la liste des événements
+          this.selectedEvent = null;
+          this.router.navigate(['/events']);
         },
         (error) => {
           console.error('Erreur lors de la mise à jour de l\'événement', error);

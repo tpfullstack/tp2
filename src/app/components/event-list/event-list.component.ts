@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { ArtistService } from '../../services/artist.service';
-import { Router } from '@angular/router';  // Ajout du Router
-import { FormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,9 +14,9 @@ import { CommonModule } from '@angular/common';
 })
 export class EventListComponent implements OnInit {
   events: any[] = [];
-  availableArtists: any[] = [];  // Liste des artistes disponibles pour l'ajout
+  availableArtists: any[] = [];
   selectedEvent: any = null;
-  selectedArtistId: string = '';  // ID de l'artiste à associer
+  selectedArtistId: string = '';
   currentPage: number = 0;
   pageSize: number = 5;
   totalPages: number = 0;
@@ -25,11 +25,11 @@ export class EventListComponent implements OnInit {
     private eventService: EventService,
     private artistService: ArtistService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadEvents();
-    this.loadAvailableArtists(); // Charger les artistes disponibles au démarrage
+    this.loadAvailableArtists();
   }
 
   loadEvents(): void {
@@ -45,7 +45,6 @@ export class EventListComponent implements OnInit {
   }
 
   loadAvailableArtists(): void {
-    // Charger les artistes disponibles pour association
     this.artistService.getArtists(0, 100).subscribe(
       (data) => {
         this.availableArtists = data.content || [];
@@ -61,8 +60,8 @@ export class EventListComponent implements OnInit {
       this.eventService.updateEvent(this.selectedEvent.id, this.selectedEvent).subscribe(
         (response) => {
           console.log('Événement mis à jour avec succès', response);
-          this.loadEvents();  // Recharge la liste des événements après mise à jour
-          this.selectedEvent = null;  // Ferme la vue des détails
+          this.loadEvents();
+          this.selectedEvent = null;
         },
         (error) => {
           console.error('Erreur lors de la mise à jour de l\'événement', error);
@@ -73,12 +72,10 @@ export class EventListComponent implements OnInit {
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (data) => {
-        this.selectedEvent = data; 
+        this.selectedEvent = data;
         console.log('Détails de l\'événement récupérés:', this.selectedEvent);
-  
-        // Vérifier si la date est déjà au format correct
+
         if (this.selectedEvent) {
-          // Si les dates sont déjà au format yyyy-MM-dd, pas besoin de les convertir
           this.selectedEvent.startDate = this.selectedEvent.startDate || '';
           this.selectedEvent.endDate = this.selectedEvent.endDate || '';
         }
@@ -89,18 +86,18 @@ export class EventListComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
   attachArtist(eventId: string, artistId: string): void {
     if (!artistId) {
       alert('Veuillez sélectionner un artiste à associer.');
       return;
     }
-  
+
     this.eventService.linkArtistToEvent(eventId, artistId).subscribe({
       next: () => {
         alert('Artiste associé avec succès.');
-        this.loadEventDetails(eventId); // Recharge les détails de l'événement
+        this.loadEventDetails(eventId);
       },
       error: (err) => {
         console.error('Erreur lors de l\'association de l\'artiste :', err);
@@ -108,14 +105,14 @@ export class EventListComponent implements OnInit {
       },
     });
   }
-  
+
 
   detachArtist(eventId: string, artistId: string): void {
     if (artistId) {
       this.eventService.unlinkArtistFromEvent(eventId, artistId).subscribe(
         () => {
           console.log('Artiste détaché de l\'événement');
-          this.loadEvents();  // Recharge la liste des événements après suppression
+          this.loadEvents();
         },
         (error) => {
           console.error('Erreur lors du détachement de l\'artiste', error);
@@ -125,13 +122,13 @@ export class EventListComponent implements OnInit {
   }
 
   closeModal(): void {
-    this.selectedEvent = null; // Ferme la modal
+    this.selectedEvent = null;
   }
 
   detailsEvent(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (event) => {
-        this.selectedEvent = event; // Ouvre la modal avec les détails de l'événement
+        this.selectedEvent = event;
       },
       (error) => {
         console.error('Erreur lors de la récupération des détails de l\'événement', error);
@@ -144,7 +141,7 @@ export class EventListComponent implements OnInit {
       this.eventService.deleteEventById(eventId).subscribe(
         () => {
           console.log('Événement supprimé avec succès');
-          this.loadEvents();  // Recharge la liste après suppression
+          this.loadEvents();
         },
         (error) => {
           console.error('Erreur lors de la suppression de l\'événement', error);
@@ -154,7 +151,7 @@ export class EventListComponent implements OnInit {
   }
 
   navigateToAddEvent(): void {
-    this.router.navigate(['/create-event']);  // Redirige vers la page d'ajout d'événement
+    this.router.navigate(['/create-event']);
   }
 
   decrementPage(): void {
@@ -166,12 +163,12 @@ export class EventListComponent implements OnInit {
   navigateToDetail(event: any): void {
     this.router.navigate(['/events', event.id]);
   }
-  
+
   incrementPage(): void {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
       this.loadEvents();
     }
   }
-  
+
 }
