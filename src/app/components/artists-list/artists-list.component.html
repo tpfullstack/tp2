@@ -30,6 +30,6 @@
 
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
-    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
+    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1 || artists.length < 10">Suivant</button>
   </div>
 </div>

@@ -18,7 +18,7 @@ export class EventListComponent implements OnInit {
   selectedEvent: any = null;
   selectedArtistId: string = '';
   currentPage: number = 0;
-  pageSize: number = 5;
+  pageSize: number = 10;
   totalPages: number = 0;
 
   constructor(

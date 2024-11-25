@@ -15,7 +15,7 @@ export class ArtistsListComponent implements OnInit {
   artists: any[] = [];
   selectedArtist: any = null;
   currentPage: number = 0;
-  pageSize: number = 5;
+  pageSize: number = 10;
   totalPages: number = 0;
 
   constructor(private artistService: ArtistService, private router: Router) { }
