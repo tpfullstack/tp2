@@ -56,6 +56,13 @@
   outline: none;
 }
 
+.artists-list-container {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
 .artist-item {
   display: flex;
   justify-content: space-between;
@@ -109,13 +116,14 @@ button.dissociate:hover {
   background-color: #0056b3;
 }
 
-.modal-actions .btn-delete {
-  background-color: #6c757d;
+.btn-delete {
+  background-color: #ff4d4f;
   color: white;
+  margin-left: 10px;
 }
 
-.modal-actions .btn-delete:hover {
-  background-color: #5a6268;
+.btn-delete:hover {
+  background-color: #d9363e;
 }
 
 .close-modal {
@@ -139,4 +147,38 @@ button.dissociate:hover {
   font-size: 12px;
   margin-top: 0px;
   margin-bottom: 10px;
+}
+
+/* Styles pour la barre de défilement */
+.artists-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.artists-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.artists-list-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.artists-list-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.info-message {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
 }

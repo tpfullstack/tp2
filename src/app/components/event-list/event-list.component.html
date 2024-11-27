@@ -10,6 +10,7 @@
         <th>Événement</th>
         <th>Date de début</th>
         <th>Date de fin</th>
+        <th>Nombre d'artistes</th>
         <th>Artistes</th>
         <th>Actions</th>
       </tr>
@@ -19,6 +20,7 @@
         <td>{{ event.label }}</td>
         <td>{{ event.startDate | date:'dd/MM/yyyy' }}</td>
         <td>{{ event.endDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ event.artists.length }}</td>
         <td>
           <ul>
             <li *ngFor="let artist of event.artists">
@@ -40,12 +42,10 @@
   </div>
 </div>
 
-
-<!-- Popin d'information -->
+<!-- Popin pour messages -->
 <div *ngIf="showPopin" class="modal-overlay">
   <div class="modal-content">
     <p>{{ popinMessage }}</p>
-    <button class="btn-close" (click)="closePopin()">Fermer</button>
   </div>
 </div>
 
@@ -53,7 +53,7 @@
 <div *ngIf="showDeleteConfirmation" class="modal-overlay">
   <div class="modal-content">
     <p>Êtes-vous sûr de vouloir supprimer cet événement ?</p>
-    <button class="btn-delete" (click)="confirmDeleteEvent()">Confirmer</button>
-    <button class="btn-close" (click)="cancelDelete()">Annuler</button>
+    <button class="btn-close" (click)="confirmDeleteEvent()">Confirmer</button>
+    <button class="btn-delete" (click)="cancelDelete()">Annuler</button>
   </div>
 </div>

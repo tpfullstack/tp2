@@ -21,10 +21,10 @@ export class EventListComponent implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
 
-  showPopin: boolean = false; // Pour le message d'information
-  showDeleteConfirmation: boolean = false; // Pour la confirmation de suppression
+  showPopin: boolean = false;
+  showDeleteConfirmation: boolean = false;
   popinMessage: string = '';
-  eventToDeleteId: string | null = null; // ID de l'événement à supprimer
+  eventToDeleteId: string | null = null;
 
   constructor(
     private eventService: EventService,
@@ -43,7 +43,10 @@ export class EventListComponent implements OnInit {
 
   showMessage(message: string): void {
     this.popinMessage = message;
-    this.showPopin = true; // Afficher la popin d'information
+    this.showPopin = true;
+    setTimeout(() => {
+      this.closePopin();
+    }, 693);
   }
 
   closePopin(): void {
@@ -53,7 +56,10 @@ export class EventListComponent implements OnInit {
   loadEvents(): void {
     this.eventService.getEvents(this.currentPage, this.pageSize).subscribe(
       (data) => {
-        this.events = data.content;
+        this.events = data.content.map((event: any) => ({
+          ...event,
+          artists: event.artists || []
+        }));
         this.totalPages = data.totalPages;
       },
       (error) => {
@@ -75,20 +81,20 @@ export class EventListComponent implements OnInit {
   }
 
   deleteEvent(eventId: string): void {
-    this.eventToDeleteId = eventId; // Enregistrer l'ID à supprimer
-    this.showDeleteConfirmation = true; // Afficher la popin de confirmation
+    this.eventToDeleteId = eventId;
+    this.showDeleteConfirmation = true;
   }
 
   confirmDeleteEvent(): void {
     if (this.eventToDeleteId) {
       this.eventService.deleteEventById(this.eventToDeleteId).subscribe(
         () => {
-          this.showDeleteConfirmation = false; // Fermer la popin de confirmation
-          this.showMessage('Événement supprimé avec succès'); // Afficher le message de succès
+          this.showDeleteConfirmation = false;
+          this.showMessage('Événement supprimé avec succès');
           this.loadEvents();
         },
         (error) => {
-          this.showDeleteConfirmation = false; // Fermer la popin de confirmation
+          this.showDeleteConfirmation = false;
           this.showMessage('Erreur lors de la suppression de l\'événement');
         }
       );

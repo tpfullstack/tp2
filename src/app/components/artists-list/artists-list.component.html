@@ -1,6 +1,9 @@
 <div class="artist-table-container">
   <div class="header-container">
     <h2 class="title">Liste d'artistes</h2>
+    <div class="search-container">
+      <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Rechercher un artiste" class="search-input">
+    </div>
     <button class="btn-add" (click)="navigateToAddArtist()">Ajouter un artiste</button>
   </div>
 
@@ -13,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let artist of artists">
+      <tr *ngFor="let artist of filteredArtists">
         <td>{{ artist.label }}</td>
         <td>
           <ul>
@@ -30,7 +33,7 @@
 
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
-    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1 || artists.length < 10">Suivant</button>
+    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1 || filteredArtists.length < 10">Suivant</button>
   </div>
 </div>
 
@@ -38,7 +41,6 @@
 <div *ngIf="showPopin" class="modal-overlay">
   <div class="modal-content">
     <p>{{ popinMessage }}</p>
-    <button class="btn-close" (click)="closePopin()">Fermer</button>
   </div>
 </div>
 

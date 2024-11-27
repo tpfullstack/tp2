@@ -13,10 +13,12 @@ import { Router } from '@angular/router';
 })
 export class ArtistsListComponent implements OnInit {
   artists: any[] = [];
+  filteredArtists: any[] = [];
   selectedArtist: any = null;
   currentPage: number = 0;
   pageSize: number = 10;
   totalPages: number = 0;
+  searchTerm: string = '';
 
   showPopin: boolean = false;
   popinMessage: string = '';
@@ -36,6 +38,9 @@ export class ArtistsListComponent implements OnInit {
   showMessage(message: string): void {
     this.popinMessage = message;
     this.showPopin = true;
+    setTimeout(() => {
+      this.closePopin();
+    }, 693); // Le message se fermera après 3 secondes
   }
 
   closePopin(): void {
@@ -46,11 +51,18 @@ export class ArtistsListComponent implements OnInit {
     this.artistService.getArtists(this.currentPage, this.pageSize).subscribe(
       (data) => {
         this.artists = data.content;
+        this.filteredArtists = [...this.artists];
         this.totalPages = data.totalPages;
       },
       () => {
         this.showMessage('Erreur lors de la récupération des artistes.');
       }
+    );
+  }
+
+  onSearch(): void {
+    this.filteredArtists = this.artists.filter(artist =>
+      artist.label.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 

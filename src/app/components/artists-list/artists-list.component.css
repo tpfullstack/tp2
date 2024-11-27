@@ -20,6 +20,20 @@
   font-weight: bold;
   color: #333;
   margin: 0;
+  white-space: nowrap;
+}
+
+.search-container {
+  flex: 1;
+  margin: 0 20px;
+}
+
+.search-input {
+  width: 47.5%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 .btn-add {
@@ -31,6 +45,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
 .btn-add:hover {
@@ -134,10 +149,7 @@
   margin-left: 10px;
 }
 
-.btn-delete:hover {
-  background-color: #d9363e;
-}
-.btn-delete-pop {
+.btn-close {
   background-color: #ff4d4f;
   color: white;
   border: none;
@@ -147,21 +159,6 @@
   transition: background-color 0.3s;
 }
 
-.btn-delete-pop:hover {
-  background-color: #d9363e;
-}
-
-button[disabled] {
-  background-color: #e0e0e0;
-  cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-  .artist-table td button {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-}
 .modal-content {
   background: white;
   padding: 20px;
@@ -171,7 +168,8 @@ button[disabled] {
   max-width: 400px;
   width: 90%;
 }
-.btn-close {
+
+.btn-delete-pop {
   margin-top: 10px;
   padding: 10px 20px;
   background-color: #007bff;
@@ -181,6 +179,39 @@ button[disabled] {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.btn-close:hover {
+
+.btn-delete-pop:hover {
   background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  .search-container {
+    margin: 10px 0;
+  }
+
+  .btn-add {
+    width: 100%;
+  }
+
+  .artist-table td button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.modal-overlay {
+  animation: fadeOut 0.5s ease 2.5s forwards;
 }

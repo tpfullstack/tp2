@@ -16,6 +16,8 @@ export class EventDetailComponent implements OnInit {
   selectedEvent: any = null;
   availableArtists: any[] = [];
   eventId: string = '';
+  showPopin: boolean = false;
+  popinMessage: string = '';
 
   constructor(
     private eventService: EventService,
@@ -24,7 +26,6 @@ export class EventDetailComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.eventId = params['id'];
@@ -32,8 +33,7 @@ export class EventDetailComponent implements OnInit {
     });
     this.loadAvailableArtists();
   }
-  showPopin: boolean = false;
-  popinMessage: string = '';
+
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (data) => {
@@ -42,41 +42,51 @@ export class EventDetailComponent implements OnInit {
           startDate: this.normalizeDate(data.startDate),
           endDate: this.normalizeDate(data.endDate)
         };
+        this.updateAvailableArtistsStatus();
       },
       (error) => {
-        this.showMessage('Impossible de récupérer les détails.');
+        this.showMessage('Impossible de récupérer les détails de l\'événement.');
       }
     );
   }
-  
+
   normalizeDate(date: string): string {
     if (!date) return '';
     return new Date(date).toISOString().split('T')[0];
   }
-  
-  
 
   loadAvailableArtists(): void {
     this.artistService.getArtists(0, 100).subscribe(
       (data) => {
         this.availableArtists = data.content || [];
+        this.updateAvailableArtistsStatus();
+      },
+      (error) => {
+        this.showMessage('Erreur lors du chargement des artistes disponibles.');
       }
     );
   }
 
-  
+  updateAvailableArtistsStatus(): void {
+    if (this.selectedEvent && this.selectedEvent.artists && this.availableArtists.length > 0) {
+      this.availableArtists.forEach(artist => {
+        artist.associated = this.selectedEvent.artists.some((eventArtist: any) => eventArtist.id === artist.id);
+      });
+    }
+  }
+
   updateEvent(): void {
     if (new Date(this.selectedEvent.startDate) > new Date(this.selectedEvent.endDate)) {
       this.showMessage('La date de fin doit être après la date de début.');
       return;
     }
-  
+
     if (this.selectedEvent) {
       const updatedEvent = {
         label: this.selectedEvent.label,
         startDate: this.convertDateToApiFormat(new Date(this.selectedEvent.startDate)),
         endDate: this.convertDateToApiFormat(new Date(this.selectedEvent.endDate))
-      };  
+      };
       this.eventService.updateEvent(this.eventId, updatedEvent).subscribe(
         (response) => {
           this.eventService.setGlobalMessage('Événement mis à jour avec succès.');
@@ -89,43 +99,63 @@ export class EventDetailComponent implements OnInit {
     }
   }
 
-  showMessage(message: string): void {
-    this.popinMessage = message;
-    this.showPopin = true;
-  }
   toggleAssociation(artist: any): void {
-    artist.associated = !artist.associated;
-
     if (artist.associated) {
-      this.attachArtist(this.eventId, artist.id);
-    } else {
       this.detachArtist(this.eventId, artist.id);
+    } else {
+      this.attachArtist(this.eventId, artist.id);
     }
   }
 
   attachArtist(eventId: string, artistId: string): void {
     this.eventService.linkArtistToEvent(eventId, artistId).subscribe({
-      next: () => console.log(`Artiste ${artistId} associé.`),
-      error: (err) => alert('Association échouée.')
+      next: () => {
+        console.log(`Artiste ${artistId} associé.`);
+        const artist = this.availableArtists.find(a => a.id === artistId);
+        if (artist) {
+          artist.associated = true;
+        }
+        this.showMessage('Artiste associé avec succès.');
+      },
+      error: (err) => {
+        this.showMessage('Erreur lors de l\'association de l\'artiste.');
+      }
     });
   }
 
   detachArtist(eventId: string, artistId: string): void {
     this.eventService.unlinkArtistFromEvent(eventId, artistId).subscribe({
-      next: () => console.log(`Artiste ${artistId} dissocié.`),
-      error: (err) => alert('Dissociation échouée.')
+      next: () => {
+        console.log(`Artiste ${artistId} dissocié.`);
+        const artist = this.availableArtists.find(a => a.id === artistId);
+        if (artist) {
+          artist.associated = false;
+        }
+        this.showMessage('Artiste dissocié avec succès.');
+      },
+      error: (err) => {
+        this.showMessage('Erreur lors de la dissociation de l\'artiste.');
+      }
     });
   }
 
   convertDateToApiFormat(date: Date): string {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Les mois commencent à 0
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
+  showMessage(message: string): void {
+    this.popinMessage = message;
+    this.showPopin = true;
+    setTimeout(() => this.closePopin(), 3000);
+  }
+
   closePopin(): void {
     this.showPopin = false;
   }
+
   compareDates(date1: string, date2: string): boolean {
     return new Date(date1) > new Date(date2);
   }
