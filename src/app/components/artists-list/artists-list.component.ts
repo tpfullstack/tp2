@@ -18,14 +18,28 @@ export class ArtistsListComponent implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
 
-  constructor(private artistService: ArtistService, private router: Router) { }
+  showPopin: boolean = false;
+  popinMessage: string = '';
+  showDeleteConfirmation: boolean = false;
+  artistToDeleteId: string | null = null;
+
+  constructor(private artistService: ArtistService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadArtists();
+    const message = this.artistService.getGlobalMessage();
+    if (message) {
+      this.showMessage(message);
+    }
   }
-   // Éditer un artiste (ouvre les détails dans une modal ou une autre vue)
-   editArtist(artist: any): void {
-    console.log('Édition de l\'artiste :', artist);
+
+  showMessage(message: string): void {
+    this.popinMessage = message;
+    this.showPopin = true;
+  }
+
+  closePopin(): void {
+    this.showPopin = false;
   }
 
   loadArtists(): void {
@@ -34,8 +48,8 @@ export class ArtistsListComponent implements OnInit {
         this.artists = data.content;
         this.totalPages = data.totalPages;
       },
-      (error) => {
-        console.error('Erreur lors de la récupération des artistes', error);
+      () => {
+        this.showMessage('Erreur lors de la récupération des artistes.');
       }
     );
   }
@@ -54,27 +68,13 @@ export class ArtistsListComponent implements OnInit {
     }
   }
 
-
-  updateArtist(): void {
-    if (this.selectedArtist) {
-      this.artistService.updateArtist(this.selectedArtist.id, this.selectedArtist).subscribe(
-        (response) => {
-          this.loadArtists();
-          this.selectedArtist = null;
-        },
-        (error) => {
-          console.error('Erreur lors de la mise à jour de l\'artiste', error);
-        }
-      );
-    }
-  }
-
   navigateToAddArtist(): void {
     this.router.navigate(['/create-artist']);
   }
 
   closeModal(): void {
-    this.selectedArtist = null;
+    this.artistService.setGlobalMessage('Modification annulée.');
+    this.router.navigate(['/artists']);
   }
 
   detailsArtist(artistId: string): void {
@@ -82,18 +82,39 @@ export class ArtistsListComponent implements OnInit {
       (artist) => {
         this.selectedArtist = artist;
       },
-      (error) => {
-        console.error('Erreur lors de la récupération des détails de l\'artiste', error);
+      () => {
+        this.showMessage('Erreur lors de la récupération des détails de l\'artiste.');
       }
     );
   }
+
   navigateToDetail(artistId: string): void {
     this.router.navigate([`/artists/${artistId}`]);
   }
+
   deleteArtist(artistId: string): void {
-    this.artistService.deleteArtistById(artistId).subscribe(() => {
-      this.loadArtists();
-    });
+    this.artistToDeleteId = artistId;
+    this.showDeleteConfirmation = true;
   }
 
+  confirmDeleteArtist(): void {
+    if (this.artistToDeleteId) {
+      this.artistService.deleteArtistById(this.artistToDeleteId).subscribe(
+        () => {
+          this.loadArtists();
+          this.showMessage('L\'artiste a été supprimé avec succès.');
+          this.closeDeleteConfirmation();
+        },
+        () => {
+          this.showMessage('Erreur lors de la suppression de l\'artiste.');
+          this.closeDeleteConfirmation();
+        }
+      );
+    }
+  }
+
+  closeDeleteConfirmation(): void {
+    this.showDeleteConfirmation = false;
+    this.artistToDeleteId = null;
+  }
 }

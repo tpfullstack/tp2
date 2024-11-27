@@ -21,6 +21,11 @@ export class EventListComponent implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
 
+  showPopin: boolean = false; // Pour le message d'information
+  showDeleteConfirmation: boolean = false; // Pour la confirmation de suppression
+  popinMessage: string = '';
+  eventToDeleteId: string | null = null; // ID de l'événement à supprimer
+
   constructor(
     private eventService: EventService,
     private artistService: ArtistService,
@@ -30,6 +35,19 @@ export class EventListComponent implements OnInit {
   ngOnInit(): void {
     this.loadEvents();
     this.loadAvailableArtists();
+    const message = this.eventService.getGlobalMessage();
+    if (message) {
+      this.showMessage(message);
+    }
+  }
+
+  showMessage(message: string): void {
+    this.popinMessage = message;
+    this.showPopin = true; // Afficher la popin d'information
+  }
+
+  closePopin(): void {
+    this.showPopin = false;
   }
 
   loadEvents(): void {
@@ -39,7 +57,7 @@ export class EventListComponent implements OnInit {
         this.totalPages = data.totalPages;
       },
       (error) => {
-        console.error('Erreur lors de la récupération des événements', error);
+        this.showMessage('Erreur lors de la récupération des événements');
       }
     );
   }
@@ -51,103 +69,35 @@ export class EventListComponent implements OnInit {
       },
       (error) => {
         console.error('Erreur lors de la récupération des artistes disponibles', error);
-      }
-    );
-  }
-
-  updateEvent(): void {
-    if (this.selectedEvent) {
-      this.eventService.updateEvent(this.selectedEvent.id, this.selectedEvent).subscribe(
-        (response) => {
-          console.log('Événement mis à jour avec succès', response);
-          this.loadEvents();
-          this.selectedEvent = null;
-        },
-        (error) => {
-          console.error('Erreur lors de la mise à jour de l\'événement', error);
-        }
-      );
-    }
-  }
-  loadEventDetails(eventId: string): void {
-    this.eventService.getEventById(eventId).subscribe(
-      (data) => {
-        this.selectedEvent = data;
-        console.log('Détails de l\'événement récupérés:', this.selectedEvent);
-
-        if (this.selectedEvent) {
-          this.selectedEvent.startDate = this.selectedEvent.startDate || '';
-          this.selectedEvent.endDate = this.selectedEvent.endDate || '';
-        }
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des détails de l\'événement :', error);
-        alert('Impossible de récupérer les détails de l\'événement.');
-      }
-    );
-  }
-
-
-  attachArtist(eventId: string, artistId: string): void {
-    if (!artistId) {
-      alert('Veuillez sélectionner un artiste à associer.');
-      return;
-    }
-
-    this.eventService.linkArtistToEvent(eventId, artistId).subscribe({
-      next: () => {
-        alert('Artiste associé avec succès.');
-        this.loadEventDetails(eventId);
-      },
-      error: (err) => {
-        console.error('Erreur lors de l\'association de l\'artiste :', err);
-        alert('Impossible d\'associer l\'artiste.');
-      },
-    });
-  }
-
-
-  detachArtist(eventId: string, artistId: string): void {
-    if (artistId) {
-      this.eventService.unlinkArtistFromEvent(eventId, artistId).subscribe(
-        () => {
-          console.log('Artiste détaché de l\'événement');
-          this.loadEvents();
-        },
-        (error) => {
-          console.error('Erreur lors du détachement de l\'artiste', error);
-        }
-      );
-    }
-  }
-
-  closeModal(): void {
-    this.selectedEvent = null;
-  }
-
-  detailsEvent(eventId: string): void {
-    this.eventService.getEventById(eventId).subscribe(
-      (event) => {
-        this.selectedEvent = event;
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des détails de l\'événement', error);
+        this.showMessage('Erreur lors de la récupération des artistes disponibles');
       }
     );
   }
 
   deleteEvent(eventId: string): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-      this.eventService.deleteEventById(eventId).subscribe(
+    this.eventToDeleteId = eventId; // Enregistrer l'ID à supprimer
+    this.showDeleteConfirmation = true; // Afficher la popin de confirmation
+  }
+
+  confirmDeleteEvent(): void {
+    if (this.eventToDeleteId) {
+      this.eventService.deleteEventById(this.eventToDeleteId).subscribe(
         () => {
-          console.log('Événement supprimé avec succès');
+          this.showDeleteConfirmation = false; // Fermer la popin de confirmation
+          this.showMessage('Événement supprimé avec succès'); // Afficher le message de succès
           this.loadEvents();
         },
         (error) => {
-          console.error('Erreur lors de la suppression de l\'événement', error);
+          this.showDeleteConfirmation = false; // Fermer la popin de confirmation
+          this.showMessage('Erreur lors de la suppression de l\'événement');
         }
       );
     }
+  }
+
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.eventToDeleteId = null;
   }
 
   navigateToAddEvent(): void {
@@ -160,6 +110,7 @@ export class EventListComponent implements OnInit {
       this.loadEvents();
     }
   }
+
   navigateToDetail(event: any): void {
     this.router.navigate(['/events', event.id]);
   }
@@ -170,5 +121,4 @@ export class EventListComponent implements OnInit {
       this.loadEvents();
     }
   }
-
 }

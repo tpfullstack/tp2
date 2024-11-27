@@ -16,13 +16,8 @@ export class EventService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    console.log('Appel API avec paramètres :', params.toString());
 
-    return this.http.get<any>(this.apiUrl, { params }).pipe(
-      tap((data) => {
-        console.log('Données reçues de l\'API :', data);
-      })
-    );
+    return this.http.get<any>(this.apiUrl, { params }).pipe();
   }
   getEventById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
@@ -37,7 +32,6 @@ export class EventService {
     return this.http.post<any>(this.apiUrl, event);
   }
   linkArtistToEvent(eventId: string, artistId: string): Observable<any> {
-    console.log(`Association de l'artiste ${artistId} à l'événement ${eventId}`);
     return this.http.post(`${this.apiUrl}/${eventId}/artists/${artistId}`, {});
   }
 
@@ -45,19 +39,25 @@ export class EventService {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-
-    console.log('Appel API pour récupérer les artistes avec paramètres :', params.toString());
-
     return this.http.get<any>(this.apiUrl, { params }).pipe(
-      tap((data) => {
-        console.log('Données reçues des artistes :', data);
-      })
+    
     );
   }
   unlinkArtistFromEvent(eventId: string, artistId: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${eventId}/artists/${artistId}`);
   }
+  
+  private globalMessage: string = '';
 
+  setGlobalMessage(message: string): void {
+    this.globalMessage = message;
+  }
+  
+  getGlobalMessage(): string {
+    const message = this.globalMessage;
+    this.globalMessage = ''; // Réinitialiser après récupération
+    return message;
+  }
 
 
 }

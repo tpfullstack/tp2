@@ -33,3 +33,20 @@
     <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1 || artists.length < 10">Suivant</button>
   </div>
 </div>
+
+<!-- Popin pour messages -->
+<div *ngIf="showPopin" class="modal-overlay">
+  <div class="modal-content">
+    <p>{{ popinMessage }}</p>
+    <button class="btn-close" (click)="closePopin()">Fermer</button>
+  </div>
+</div>
+
+<!-- Popin de confirmation pour la suppression -->
+<div *ngIf="showDeleteConfirmation" class="modal-overlay">
+  <div class="modal-content">
+    <p>Êtes-vous sûr de vouloir supprimer cet artiste ?</p>
+    <button class="btn-delete-pop" (click)="confirmDeleteArtist()">Confirmer</button>
+    <button class="btn-close" (click)="closeDeleteConfirmation()">Annuler</button>
+  </div>
+</div>

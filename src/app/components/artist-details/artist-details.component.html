@@ -14,8 +14,17 @@
       </div>
       <div class="modal-actions">
         <button type="submit" class="btn-details" [disabled]="artistForm.invalid">Mettre à jour</button>
-        <button type="button" class="btn-delete" (click)="navigateToArtists()">Annuler</button>
+        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
     </form>
+  </div>
+</div>
+<div *ngIf="popinMessage" class="modal-overlay" (click)="closePopin()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Notification</h2>
+    <p>{{ popinMessage }}</p>
+    <div class="modal-actions">
+      <button class="btn-details" (click)="closePopin()">OK</button>
+    </div>
   </div>
 </div>

@@ -20,52 +20,39 @@ export class ArtistService {
       sort.forEach((s) => (params = params.append('sort', s)));
     }
 
-    console.log('Appel API avec paramètres :', params.toString());
-
-    return this.http.get<any>(this.apiUrl, { params }).pipe(
-      tap((data) => {
-        console.log('Données reçues de l\'API :', data);
-      })
-    );
+    return this.http.get<any>(this.apiUrl, { params }).pipe();
   }
 
   getArtistById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      tap((data) => {
-        console.log(`Données de l'artiste ${id} :`, data);
-      })
-    );
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe();
   }
 
   createArtist(artist: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, artist).pipe(
-      tap((data) => {
-        console.log('Artiste créé :', data);
-      })
     );
   }
 
   updateArtist(id: string, artist: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, artist).pipe(
-      tap((data) => {
-        console.log(`Artiste ${id} mis à jour :`, data);
-      })
-    );
+    return this.http.put<any>(`${this.apiUrl}/${id}`, artist).pipe();
   }
 
   deleteArtistById(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe(
-      tap(() => {
-        console.log(`Artiste ${id} supprimé`);
-      })
-    );
+    return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe();
   }
 
   getEventsForArtist(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}/events`).pipe(
-      tap((data) => {
-        console.log(`Événements de l'artiste ${id} :`, data);
-      })
-    );
+    return this.http.get<any>(`${this.apiUrl}/${id}/events`).pipe();
   }
+  private globalMessage: string = '';
+
+setGlobalMessage(message: string): void {
+  this.globalMessage = message;
+}
+
+getGlobalMessage(): string {
+  const message = this.globalMessage;
+  this.globalMessage = ''; // Réinitialiser après récupération
+  return message;
+}
+
 }

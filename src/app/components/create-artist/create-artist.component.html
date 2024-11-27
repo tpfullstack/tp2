@@ -1,21 +1,34 @@
-<div *ngIf="artist" class="modal-overlay" (click)="closeModal()">
+<div *ngIf="artist" class="modal-overlay" (click)="navigateToArtists()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2>Détails de l'artiste</h2>
+    <h2>Créer un artiste</h2>
     <form (ngSubmit)="createArtist()" #artistForm="ngForm">
       <label>
         Nom de l'artiste :
-        <input type="text" [(ngModel)]="artist.label" name="label" required minlength="3" #labelInput="ngModel" />
+        <input
+          type="text"
+          [(ngModel)]="artist.label"
+          name="label"
+          required
+          minlength="3"
+          #labelInput="ngModel"
+        />
       </label>
       <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
         <small *ngIf="labelInput.errors?.['required']">Le nom est obligatoire.</small>
-        <small *ngIf="labelInput.errors?.['minlength']">
-          Le nom doit contenir au moins 3 caractères.
-        </small>
+        <small *ngIf="labelInput.errors?.['minlength']">Le nom doit contenir au moins 3 caractères.</small>
       </div>
       <div class="modal-actions">
         <button type="submit" class="btn-add" [disabled]="artistForm.invalid">Créer</button>
         <button type="button" class="btn-delete" (click)="navigateToArtists()">Annuler</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Popin pour messages -->
+<div *ngIf="showPopin" class="modal-overlay">
+  <div class="modal-content">
+    <p>{{ popinMessage }}</p>
+    <button class="btn-close" (click)="closePopin()">Fermer</button>
   </div>
 </div>

@@ -24,6 +24,7 @@ export class EventDetailComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
+  
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.eventId = params['id'];
@@ -31,75 +32,67 @@ export class EventDetailComponent implements OnInit {
     });
     this.loadAvailableArtists();
   }
-
+  showPopin: boolean = false;
+  popinMessage: string = '';
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (data) => {
-        this.selectedEvent = data;
-
-        this.selectedEvent.startDate = this.normalizeDate(this.selectedEvent.startDate);
-        this.selectedEvent.endDate = this.normalizeDate(this.selectedEvent.endDate);
-
-        this.selectedEvent.startDate = new Date(this.selectedEvent.startDate);
-        this.selectedEvent.endDate = new Date(this.selectedEvent.endDate);
+        this.selectedEvent = {
+          ...data,
+          startDate: this.normalizeDate(data.startDate),
+          endDate: this.normalizeDate(data.endDate)
+        };
       },
       (error) => {
-        console.error('Erreur :', error);
-        alert('Impossible de récupérer les détails.');
+        this.showMessage('Impossible de récupérer les détails.');
       }
     );
   }
+  
+  normalizeDate(date: string): string {
+    if (!date) return '';
+    return new Date(date).toISOString().split('T')[0];
+  }
+  
+  
 
   loadAvailableArtists(): void {
     this.artistService.getArtists(0, 100).subscribe(
       (data) => {
         this.availableArtists = data.content || [];
-        console.log('Artistes disponibles chargés:', this.availableArtists);
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des artistes disponibles', error);
-        alert('Impossible de charger les artistes disponibles.');
       }
     );
   }
 
-  normalizeDate(date: string): string {
-    if (!date) return '';
-    return date.split('T')[0];
-  }
-
+  
   updateEvent(): void {
-    console.log('Start Date:', this.selectedEvent.startDate);
-    console.log('End Date:', this.selectedEvent.endDate);
-
-    if (this.selectedEvent.startDate && this.selectedEvent.endDate) {
-      if (this.selectedEvent.startDate > this.selectedEvent.endDate) {
-        alert('La date de fin doit être après la date de début.');
-        return;
-      }
+    if (new Date(this.selectedEvent.startDate) > new Date(this.selectedEvent.endDate)) {
+      this.showMessage('La date de fin doit être après la date de début.');
+      return;
     }
-
+  
     if (this.selectedEvent) {
       const updatedEvent = {
-        ...this.selectedEvent,
-        startDate: this.convertDateToApiFormat(this.selectedEvent.startDate),
-        endDate: this.convertDateToApiFormat(this.selectedEvent.endDate)
-      };
-
+        label: this.selectedEvent.label,
+        startDate: this.convertDateToApiFormat(new Date(this.selectedEvent.startDate)),
+        endDate: this.convertDateToApiFormat(new Date(this.selectedEvent.endDate))
+      };  
       this.eventService.updateEvent(this.eventId, updatedEvent).subscribe(
         (response) => {
-          console.log('Événement mis à jour avec succès', response);
-          this.selectedEvent = null;
+          this.eventService.setGlobalMessage('Événement mis à jour avec succès.');
           this.router.navigate(['/events']);
         },
         (error) => {
-          console.error('Erreur lors de la mise à jour de l\'événement', error);
-          alert('Erreur lors de la mise à jour de l\'événement.');
+          this.showMessage(`Erreur lors de la mise à jour de l'événement: ${error.message}`);
         }
       );
     }
   }
 
+  showMessage(message: string): void {
+    this.popinMessage = message;
+    this.showPopin = true;
+  }
   toggleAssociation(artist: any): void {
     artist.associated = !artist.associated;
 
@@ -124,17 +117,21 @@ export class EventDetailComponent implements OnInit {
     });
   }
 
-  // Convertir les dates au format API (yyyy-MM-dd)
   convertDateToApiFormat(date: Date): string {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Les mois commencent à 0
+    const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+  closePopin(): void {
+    this.showPopin = false;
+  }
+  compareDates(date1: string, date2: string): boolean {
+    return new Date(date1) > new Date(date2);
   }
 
   closeModal(): void {
-    this.selectedEvent = null;
+    this.eventService.setGlobalMessage('Modification annulée.');
     this.router.navigate(['/events']);
   }
 }

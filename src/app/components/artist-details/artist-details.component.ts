@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ArtistDetailComponent implements OnInit {
   artist: any;
+  popinMessage: string | null = null;
 
   constructor(
     private artistService: ArtistService,
@@ -29,18 +30,30 @@ export class ArtistDetailComponent implements OnInit {
     }
   }
 
-  updateArtist(): void {
-    if (this.artist) {
-      this.artistService.updateArtist(this.artist.id, this.artist).subscribe(() => {
-        this.router.navigate(['/artists']);
-      });
-    }
-  }
-  navigateToArtists() {
-    this.router.navigate(['/artists']);
-  }
-  closeModal() {
-    this.artist = null;
+  showMessage(message: string): void {
+    this.popinMessage = message;
   }
 
+  closePopin(): void {
+    this.popinMessage = null;
+  }
+
+  updateArtist(): void {
+    if (this.artist) {
+      this.artistService.updateArtist(this.artist.id, this.artist).subscribe(
+        () => {
+          this.artistService.setGlobalMessage('Artiste mis à jour avec succès.');
+          this.router.navigate(['/artists']);
+        },
+        (error) => {
+          this.showMessage('Erreur lors de la mise à jour de l\'artiste.');
+        }
+      );
+    }
+  }
+
+  closeModal() {
+    this.artistService.setGlobalMessage('Modification annulée.');
+    this.router.navigate(['/artists']);
+  }
 }

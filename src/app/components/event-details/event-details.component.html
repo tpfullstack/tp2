@@ -30,7 +30,7 @@
         </div>
       </label>
 
-      <div *ngIf="selectedEvent.startDate && selectedEvent.endDate && selectedEvent.startDate > selectedEvent.endDate"
+      <div *ngIf="selectedEvent.startDate && selectedEvent.endDate && compareDates(selectedEvent.startDate, selectedEvent.endDate)"
         class="error-message">
         La date de fin doit être après la date de début.
       </div>
@@ -49,9 +49,17 @@
 
       <div class="modal-actions">
         <button type="submit" class="btn-details"
-          [disabled]="!eventForm.form.valid || selectedEvent.startDate > selectedEvent.endDate">Mettre à jour</button>
+          [disabled]="!eventForm.form.valid || compareDates(selectedEvent.startDate, selectedEvent.endDate)">Mettre à jour</button>
         <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Popin de confirmation -->
+<div *ngIf="showPopin" class="modal-overlay">
+  <div class="modal-content">
+    <p>{{ popinMessage }}</p>
+    <button class="btn-close" (click)="closePopin()">Fermer</button>
   </div>
 </div>
