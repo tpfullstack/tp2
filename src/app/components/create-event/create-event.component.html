@@ -1,7 +1,9 @@
-<div *ngIf="newEvent" class="modal-overlay" (click)="closeModal()">
+<div class="modal-overlay" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button class="close-modal" (click)="closeModal()">&times;</button>
+    
     <h2>Créer un nouvel événement</h2>
+    
     <form (ngSubmit)="createEvent()" #eventForm="ngForm">
       <div>
         <label for="label">Label :</label>
@@ -62,32 +64,39 @@
         La date de fin doit être après la date de début.
       </div>
 
+      <!-- Sélection des artistes -->
       <div>
-        <label for="artists">Artistes :</label>
-        <select id="artists" [(ngModel)]="selectedArtistIds" name="artists" multiple>
-          <option *ngFor="let artist of artists" [value]="artist.id">
-            {{ artist.label }}
-          </option>
-        </select>
+        <h3>Artistes :</h3>
+        <div class="artists-list-container">
+          <div *ngFor="let artist of artists" class="artist-item">
+            <label>
+              <input type="checkbox" 
+                     [checked]="selectedArtistIds.includes(artist.id)"
+                     (change)="toggleArtistSelection(artist.id)">
+              {{ artist.label }}
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="modal-actions">
-        <button
-          type="submit"
-          class="btn-details"
-          [disabled]="!eventForm.form.valid || newEvent.startDate > newEvent.endDate || !isStartDateValid || !isEndDateValid"
-        >
+        <button type="submit" class="btn-details" 
+                [disabled]="!eventForm.form.valid || newEvent.startDate > newEvent.endDate || !isStartDateValid || !isEndDateValid">
           Créer
         </button>
+
         <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
-    </form>
-  </div>
-</div>
 
-<div *ngIf="showPopin" class="modal-overlay">
-  <div class="modal-content">
-    <p>{{ popinMessage }}</p>
-    <button class="btn-close" (click)="closePopin()">Fermer</button>
+    </form>
+
+    <!-- Popin pour messages -->
+    <div *ngIf="showPopin" class="modal-overlay">
+      <div class="modal-content">
+        <p>{{ popinMessage }}</p>
+        <button class="btn-close" (click)="closePopin()">Fermer</button>
+      </div>
+    </div>
+
   </div>
 </div>

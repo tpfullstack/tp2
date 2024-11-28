@@ -182,3 +182,9 @@ button.dissociate:hover {
   90% { opacity: 1; }
   100% { opacity: 0; }
 }
+.no-artists-message {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}

@@ -1,34 +1,54 @@
-<div *ngIf="artist" class="modal-overlay" (click)="navigateToArtists()">
+<div class="modal-overlay" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2>Créer un artiste</h2>
+    <button class="close-modal" (click)="closeModal()">&times;</button>
+    
+    <h2>Créer un nouvel artiste</h2>
+    
     <form (ngSubmit)="createArtist()" #artistForm="ngForm">
-      <label>
-        Nom de l'artiste :
+      <div>
+        <label for="label">Nom de l'artiste :</label>
         <input
           type="text"
-          [(ngModel)]="artist.label"
+          id="label"
+          [(ngModel)]="newArtist.label"
           name="label"
           required
           minlength="3"
           #labelInput="ngModel"
         />
-      </label>
-      <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
-        <small *ngIf="labelInput.errors?.['required']">Le nom est obligatoire.</small>
-        <small *ngIf="labelInput.errors?.['minlength']">Le nom doit contenir au moins 3 caractères.</small>
+        <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
+          <small *ngIf="labelInput.errors?.['required']">Le nom est obligatoire.</small>
+          <small *ngIf="labelInput.errors?.['minlength']">Le nom doit contenir au moins 3 caractères.</small>
+        </div>
       </div>
+
+      <div>
+        <h3>Événements :</h3>
+        <div class="events-list-container">
+          <div *ngFor="let event of events" class="event-item">
+            <label>
+              <input type="checkbox" 
+                     [checked]="selectedEventIds.includes(event.id)"
+                     (change)="toggleEventSelection(event.id)">
+              {{ event.label }}
+            </label>
+          </div>
+        </div>
+      </div>
+
       <div class="modal-actions">
-        <button type="submit" class="btn-add" [disabled]="artistForm.invalid">Créer</button>
-        <button type="button" class="btn-delete" (click)="navigateToArtists()">Annuler</button>
+        <button type="submit" class="btn-add" [disabled]="!artistForm.form.valid">Créer</button>
+        <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
     </form>
-  </div>
-</div>
 
-<!-- Popin pour messages -->
-<div *ngIf="showPopin" class="modal-overlay">
-  <div class="modal-content">
-    <p>{{ popinMessage }}</p>
-    <button class="btn-close" (click)="closePopin()">Fermer</button>
+   <!-- Popin pour messages -->
+   <div *ngIf="showPopin" class="modal-overlay">
+     <div class="modal-content info-message">
+       <p>{{ popinMessage }}</p>
+       <button class="btn-close" (click)="closePopin()">Fermer</button>
+     </div>
+   </div>
+
   </div>
 </div>

@@ -21,7 +21,6 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  position: relative;
 }
 
 .modal-content h2 {
@@ -39,88 +38,129 @@
 
 .modal-content input,
 .modal-content select {
-  width: 100%;
+  width: calc(100% - 16px); /* Ajustement pour le padding */
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
 }
 
 .modal-content input:focus,
 .modal-content select:focus {
   border-color: #007bff;
-  outline: none;
+}
+
+.artists-list-container {
+    max-height:200px; 
+    overflow-y:auto; 
+    padding-right:10px; 
+    margin-bottom:15px; 
+}
+
+.artist-item {
+  display:flex ; 
+  align-items:center ; 
+  padding :10px ; 
+  border-radius :4px ; 
+  margin-bottom :10px ; 
+  background-color:#f9f9f9 ;
+}
+
+.artist-item label {
+    display:flex; /* Utiliser flex pour aligner la checkbox et le texte */
+    align-items:center; /* Centrer verticalement la checkbox et le texte */
+    cursor:pointer; /* Changer le curseur pour indiquer que c'est cliquable */
+}
+
+.artist-item input[type="checkbox"] {
+    margin-right:10px; /* Espacement entre la checkbox et le texte */
 }
 
 button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    padding:8px 15px; /* Correction de l'espacement */
+    border:none; 
+    border-radius:4px; 
+    font-size:14px; 
+    cursor:pointer; 
+    transition:bg-color .3s ease; 
 }
 
 button.btn-details {
-  background-color: #007bff;
-  color: white;
+    background-color:#007bff; /* Couleur de fond du bouton Créer */
+    color:white; /* Couleur du texte du bouton Créer */
 }
 
 button.btn-details:hover {
-  background-color: #0056b3;
+    background-color:#0056b3; /* Couleur de fond au survol du bouton Créer */
 }
 
 .btn-delete {
-  background-color: #ff4d4f;
-  color: white;
-  margin-left: 10px;
+    background-color:#ff4d4f; /* Couleur de fond du bouton Annuler */
+    color:white; /* Couleur du texte du bouton Annuler */
 }
 
 .btn-delete:hover {
-  background-color: #d9363e;
-}
-
-.close-modal {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #aaa;
-  transition: color 0.3s ease;
-}
-
-.close-modal:hover {
-  color: #333;
+    background-color:#d9363e; /* Couleur de fond au survol du bouton Annuler */
 }
 
 .modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
+    display:flex; 
+    justify-content:space-between; 
+    margin-top:15px; 
+}
+
+.close-modal {
+    position:absolute; 
+    top :10px; 
+    right :10px; 
+    background:none; 
+    border:none; 
+    font-size :24px; 
+    cursor:pointer; 
+    color:#aaa; 
+}
+
+.close-modal:hover {
+   color:#333;  
 }
 
 .error-message {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 0px;
-  margin-bottom: 10px;
+   color:#dc3545;  
+   font-size :12px;  
+   margin-top :0px;  
+   margin-bottom :10px;  
 }
 
-.btn-close {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.info-message {
+   background-color:#4CAF50;  
+   color:white;  
+   text-align:center;  
+   padding :15px;  
+   border-radius :5px;  
+   box-shadow :0 2px rgba(0,0,0,.2);  
+   animation :fadeInOut3s ease-in-out ;  
 }
 
-.btn-close:hover {
-  background-color: #0056b3;
+@keyframes fadeInOut {
+   from { opacity :0;}  
+   to { opacity :1;}  
+}
+.no-artists-message {
+ text-align:center;
+ color:#666;
+ font-style:italic;
+ padding:20px;
+}
+
+/* Styles pour la barre de défilement */
+.artists-list-container::-webkit-scrollbar{
+ width:8px;
+}
+.artists-list-container::-webkit-scrollbar-track{
+ background:#f1f1f1;
+}
+.artists-list-container::-webkit-scrollbar-thumb{
+ background:#888;border-radius:4px;
+}
+.artists-list-container::-webkit-scrollbar-thumb:hover{
+ background:#555;
 }

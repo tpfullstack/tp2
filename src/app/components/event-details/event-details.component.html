@@ -16,7 +16,8 @@
 
       <label for="startDate">
         Date de début :
-        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required #startDateInput="ngModel" (change)="checkFutureDate('startDate')" />
+        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required #startDateInput="ngModel"
+          (change)="checkFutureDate('startDate')" />
         <div *ngIf="startDateInput.invalid && (startDateInput.dirty || startDateInput.touched)" class="error-message">
           <small *ngIf="startDateInput.errors?.['required']">La date de début est obligatoire.</small>
         </div>
@@ -27,7 +28,8 @@
 
       <label for="endDate">
         Date de fin :
-        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required #endDateInput="ngModel" (change)="checkFutureDate('endDate')" />
+        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required #endDateInput="ngModel"
+          (change)="checkFutureDate('endDate')" />
         <div *ngIf="endDateInput.invalid && (endDateInput.dirty || endDateInput.touched)" class="error-message">
           <small *ngIf="endDateInput.errors?.['required']">La date de fin est obligatoire.</small>
         </div>
@@ -35,8 +37,9 @@
           <small>La date de fin doit être dans le futur.</small>
         </div>
       </label>
-      
-      <div *ngIf="selectedEvent.startDate && selectedEvent.endDate && compareDates(selectedEvent.startDate, selectedEvent.endDate)"
+
+      <div
+        *ngIf="selectedEvent.startDate && selectedEvent.endDate && compareDates(selectedEvent.startDate, selectedEvent.endDate)"
         class="error-message">
         La date de fin doit être après la date de début.
       </div>
@@ -51,13 +54,18 @@
       <div>
         <h3>Association des artistes</h3>
         <div class="artists-list-container">
-          <div *ngFor="let artist of availableArtists" class="artist-item">
-            <span>{{ artist.label }}</span>
-            <button type="button" (click)="toggleAssociation(artist)" [class.associate]="!artist.associated"
-              [class.dissociate]="artist.associated">
-              {{ artist.associated ? 'Dissocier' : 'Associer' }}
-            </button>
+          <div *ngIf="availableArtists.length > 0; else noArtists">
+            <div *ngFor="let artist of availableArtists" class="artist-item">
+              <span>{{ artist.label }}</span>
+              <button type="button" (click)="toggleAssociation(artist)" [class.associate]="!artist.associated"
+                [class.dissociate]="artist.associated">
+                {{ artist.associated ? 'Dissocier' : 'Associer' }}
+              </button>
+            </div>
           </div>
+          <ng-template #noArtists>
+            <p class="no-artists-message">Aucun artiste n'est disponible.</p>
+          </ng-template>
         </div>
       </div>
     </form>

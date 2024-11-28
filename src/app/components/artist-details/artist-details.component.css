@@ -12,7 +12,7 @@
 }
 
 .modal-content {
-  background-color: white;
+  background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   width: 500px;
@@ -21,39 +21,90 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  position: relative;
 }
 
-.modal-content h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
+.modal-content h2,
+.modal-content h3 {
+  margin: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #333;
   text-align: center;
 }
 
 .modal-content label {
-  font-weight: bold;
-  margin-bottom: 5px;
   display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
 }
 
-.modal-content input {
+.modal-content input,
+.modal-content select {
   width: 100%;
   padding: 8px;
-  margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.events-list-container {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.associate {
+  background-color: #28a745;
+  color: white;
+}
+
+button.associate:hover {
+  background-color: #218838;
+}
+
+button.dissociate {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.dissociate:hover {
+  background-color: #c82333;
 }
 
 .modal-actions {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-
-.modal-actions button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  margin-top: 15px;
 }
 
 .modal-actions .btn-details {
@@ -65,18 +116,77 @@
   background-color: #0056b3;
 }
 
-.modal-actions .btn-delete {
-  background-color: #dc3545;
+.btn-delete {
+  background-color: #ff4d4f;
   color: white;
+  margin-left: 10px;
 }
 
-.modal-actions .btn-delete:hover {
-  background-color: #c82333;
+.btn-delete:hover {
+  background-color: #d9363e;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+  color: #333;
 }
 
 .error-message {
   color: #dc3545;
   font-size: 12px;
-  margin-top: -10px;
+  margin-top: 0px;
   margin-bottom: 10px;
+}
+
+/* Styles pour la barre de défilement */
+.events-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.events-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.events-list-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.events-list-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.info-message {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.no-events-message {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
 }

@@ -39,17 +39,23 @@ export class EventDetailComponent implements OnInit {
   loadEventDetails(eventId: string): void {
     this.eventService.getEventById(eventId).subscribe(
       (data) => {
-        this.selectedEvent = {
-          ...data,
-          startDate: this.normalizeDate(data.startDate),
-          endDate: this.normalizeDate(data.endDate)
-        };
-        this.updateAvailableArtistsStatus();
-        this.checkFutureDate('startDate');
-        this.checkFutureDate('endDate');
+        if (data) {
+          this.selectedEvent = {
+            ...data,
+            startDate: this.normalizeDate(data.startDate),
+            endDate: this.normalizeDate(data.endDate)
+          };
+          this.updateAvailableArtistsStatus();
+          this.checkFutureDate('startDate');
+          this.checkFutureDate('endDate');
+        } else {
+          this.eventService.setGlobalMessage('L\'événement demandé n\'existe pas.');
+          this.router.navigate(['/events']);
+        }
       },
       (error) => {
-        this.showMessage('Impossible de récupérer les détails de l\'événement.');
+        this.eventService.setGlobalMessage('Impossible de récupérer les détails de l\'événement. L\'événementn\'existe pas.');
+        this.router.navigate(['/events']);
       }
     );
   }
@@ -117,7 +123,11 @@ export class EventDetailComponent implements OnInit {
           this.router.navigate(['/events']);
         },
         (error) => {
-          this.showMessage(`Erreur lors de la mise à jour de l'événement: ${error.message}`);
+          if (error.status === 404) {
+            this.showMessage('L\'événement à mettre à jour n\'existe pas.');
+          } else {
+            this.showMessage(`Erreur lors de la mise à jour de l'événement: ${error.message}`);
+          }
         }
       );
     }
@@ -142,7 +152,11 @@ export class EventDetailComponent implements OnInit {
         this.showMessage('Artiste associé avec succès.');
       },
       error: (err) => {
-        this.showMessage('Erreur lors de l\'association de l\'artiste.');
+        if (err.status === 404) {
+          this.showMessage('L\'événement ou l\'artiste n\'existe pas.');
+        } else {
+          this.showMessage('Erreur lors de l\'association de l\'artiste.');
+        }
       }
     });
   }
@@ -158,7 +172,11 @@ export class EventDetailComponent implements OnInit {
         this.showMessage('Artiste dissocié avec succès.');
       },
       error: (err) => {
-        this.showMessage('Erreur lors de la dissociation de l\'artiste.');
+        if (err.status === 404) {
+          this.showMessage('L\'événement ou l\'artiste n\'existe pas.');
+        } else {
+          this.showMessage('Erreur lors de la dissociation de l\'artiste.');
+        }
       }
     });
   }

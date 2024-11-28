@@ -111,6 +111,17 @@ export class CreateEventComponent implements OnInit {
     );
   }
 
+  toggleArtistSelection(artistId: string): void {
+    const index = this.selectedArtistIds.indexOf(artistId);
+    if (index > -1) {
+      // Si l'artiste est déjà sélectionné, le retirer
+      this.selectedArtistIds.splice(index, 1);
+    } else {
+      // Sinon, ajouter l'artiste à la sélection
+      this.selectedArtistIds.push(artistId);
+    }
+  }
+
   closeModal(): void {
     this.eventService.setGlobalMessage('Création d\'événement annulée.');
     this.router.navigate(['/events']);

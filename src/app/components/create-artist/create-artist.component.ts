@@ -1,70 +1,99 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ArtistService } from '../../services/artist.service';
+import { EventService } from '../../services/event.service';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-create-artist',
-  templateUrl: './create-artist.component.html',
-  styleUrls: ['./create-artist.component.css'],
   standalone: true,
   imports: [FormsModule, CommonModule],
+  templateUrl: './create-artist.component.html',
+  styleUrls: ['./create-artist.component.css']
 })
-export class CreateArtistComponent {
-  artist = {
+export class CreateArtistComponent implements OnInit {
+  newArtist = {
     label: '',
   };
-
+  events: any[] = [];
+  selectedEventIds: string[] = [];
   showPopin: boolean = false;
   popinMessage: string = '';
 
   constructor(
     private artistService: ArtistService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private eventService: EventService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) { }
 
-  /**
-   * Affiche un message dans une pop-in.
-   * @param message Le message à afficher.
-   */
+  ngOnInit(): void {
+    this.loadEvents();
+  }
+
+  loadEvents(): void {
+    this.eventService.getEvents(0, 100).subscribe(
+      (data) => {
+        this.events = data.content || [];
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        this.showMessage('Erreur lors du chargement des événements.');
+      }
+    );
+  }
+
   showMessage(message: string): void {
     this.popinMessage = message;
     this.showPopin = true;
+    this.cdr.detectChanges();
   }
 
-  /**
-   * Ferme la pop-in.
-   */
   closePopin(): void {
     this.showPopin = false;
   }
 
-  /**
-   * Création d'un artiste avec affichage d'une pop-in en cas de succès ou d'erreur.
-   */
   createArtist(): void {
-    if (this.artist.label) {
-      this.artistService.createArtist(this.artist).subscribe(
-        () => {
-          // Stocker un message global avant la redirection
+    this.artistService.createArtist(this.newArtist).subscribe(
+      (artistResponse) => {
+        if (this.selectedEventIds.length > 0) {
+          const eventLinkRequests = this.selectedEventIds.map((eventId) =>
+            this.eventService.linkArtistToEvent(eventId, artistResponse.id).toPromise()
+          );
+
+          Promise.all(eventLinkRequests)
+            .then(() => {
+              this.artistService.setGlobalMessage('Artiste créé avec succès.');
+              this.router.navigate(['/artists']);
+            })
+            .catch(() => {
+              this.showMessage('Erreur lors de l\'association des événements à l\'artiste.');
+            });
+        } else {
           this.artistService.setGlobalMessage('Artiste créé avec succès.');
-          this.router.navigate(['/artists']); // Rediriger vers la liste des artistes
-        },
-        (error) => {
-          this.showMessage('Erreur lors de la création de l’artiste.');
+          this.router.navigate(['/artists']);
         }
-      );
+      },
+      () => {
+        this.showMessage('Erreur lors de la création de l\'artiste.');
+      }
+    );
+  }
+
+  toggleEventSelection(eventId: string): void {
+    const index = this.selectedEventIds.indexOf(eventId);
+    if (index > -1) {
+      // Si l'événement est déjà sélectionné, le retirer
+      this.selectedEventIds.splice(index, 1);
     } else {
-      this.showMessage('Le nom de l’artiste est obligatoire.');
+      // Sinon, ajouter l'événement à la sélection
+      this.selectedEventIds.push(eventId);
     }
   }
 
-  /**
-   * Retourne à la liste des artistes.
-   */
-  navigateToArtists(): void {
+  closeModal(): void {
+    this.artistService.setGlobalMessage('Création d\'artiste annulée.');
     this.router.navigate(['/artists']);
   }
 }
