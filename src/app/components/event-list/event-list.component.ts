@@ -46,7 +46,7 @@ export class EventListComponent implements OnInit {
     this.showPopin = true;
     setTimeout(() => {
       this.closePopin();
-    }, 693);
+    }, 900);
   }
 
   closePopin(): void {

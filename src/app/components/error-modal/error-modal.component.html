@@ -1,0 +1,7 @@
+<div class="modal-overlay" (click)="redirectToHome()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h1>{{ errorMessage }}</h1>
+        <p>Nous sommes désolés.</p>
+        <button (click)="redirectToHome()">Retour à l'accueil</button>
+    </div>
+</div>

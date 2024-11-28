@@ -16,17 +16,23 @@
 
       <label for="startDate">
         Date de début :
-        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required #startDateInput="ngModel" />
+        <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required #startDateInput="ngModel" (change)="checkFutureDate('startDate')" />
         <div *ngIf="startDateInput.invalid && (startDateInput.dirty || startDateInput.touched)" class="error-message">
           <small *ngIf="startDateInput.errors?.['required']">La date de début est obligatoire.</small>
+        </div>
+        <div *ngIf="!isStartDateValid" class="error-message">
+          <small>La date de début doit être dans le futur.</small>
         </div>
       </label>
 
       <label for="endDate">
         Date de fin :
-        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required #endDateInput="ngModel" />
+        <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required #endDateInput="ngModel" (change)="checkFutureDate('endDate')" />
         <div *ngIf="endDateInput.invalid && (endDateInput.dirty || endDateInput.touched)" class="error-message">
           <small *ngIf="endDateInput.errors?.['required']">La date de fin est obligatoire.</small>
+        </div>
+        <div *ngIf="!isEndDateValid" class="error-message">
+          <small>La date de fin doit être dans le futur.</small>
         </div>
       </label>
       
@@ -36,7 +42,9 @@
       </div>
       <div class="modal-actions">
         <button type="submit" class="btn-details"
-          [disabled]="!eventForm.form.valid || compareDates(selectedEvent.startDate, selectedEvent.endDate)">Mettre à jour</button>
+          [disabled]="!eventForm.form.valid || compareDates(selectedEvent.startDate, selectedEvent.endDate) || !isStartDateValid || !isEndDateValid">
+          Mettre à jour
+        </button>
         <button type="button" class="btn-delete" (click)="closeModal()">Annuler</button>
       </div>
       <!-- Sélection des artistes -->
@@ -52,12 +60,9 @@
           </div>
         </div>
       </div>
-
-      
     </form>
   </div>
 </div>
-
 
 <!-- Popin de confirmation -->
 <div *ngIf="showPopin" class="modal-overlay">

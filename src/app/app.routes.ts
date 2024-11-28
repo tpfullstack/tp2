@@ -5,34 +5,45 @@ import { CreateArtistComponent } from './components/create-artist/create-artist.
 import { EventDetailComponent } from './components/event-details/event-details.component';
 import { ArtistDetailComponent } from './components/artist-details/artist-details.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { Error500Component } from './components/error-500/error-500.component'; // Importez le nouveau composant
+
 export const routes: Route[] = [
-  {
-    path: 'events',
-    component: EventListComponent
-  },
-  {
-    path: 'create-event',
-    component: CreateEventComponent
-  },
-  {
-    path: 'artists',
-    component: ArtistsListComponent
-  },
-  {
-    path: 'events/:id',
-    component: EventDetailComponent
-  },
-  {
-    path: 'artists/:id',
-    component: ArtistDetailComponent
-  },
-  {
-    path: 'create-artist',
-    component: CreateArtistComponent
-  },
-  {
-    path: '',
-    redirectTo: '/artists',
-    pathMatch: 'full'
-  }
+    {
+        path: 'events',
+        component: EventListComponent
+    },
+    {
+        path: 'create-event',
+        component: CreateEventComponent
+    },
+    {
+        path: 'artists',
+        component: ArtistsListComponent
+    },
+    {
+        path: 'events/:id',
+        component: EventDetailComponent
+    },
+    {
+        path: 'artists/:id',
+        component: ArtistDetailComponent
+    },
+    {
+        path: 'create-artist',
+        component: CreateArtistComponent
+    },
+    {
+        path: '',
+        redirectTo: '/artists',
+        pathMatch: 'full'
+    },
+    {
+        path: 'server-error', // Nouvelle route pour l'erreur 500
+        component: Error500Component
+    },
+    {
+        path: '**', // Wildcard route for handling all other undefined routes (404)
+        component: PageNotFoundComponent
+    }
 ];

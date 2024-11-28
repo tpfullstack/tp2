@@ -3,11 +3,12 @@ import { ArtistService } from '../../services/artist.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ErrorModalComponent } from '../error-modal/error-modal.component'; // Importez votre modal d'erreur
 
 @Component({
   selector: 'app-artists-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorModalComponent], // Ajoutez le modal ici
   templateUrl: './artists-list.component.html',
   styleUrls: ['./artists-list.component.css']
 })
@@ -40,7 +41,7 @@ export class ArtistsListComponent implements OnInit {
     this.showPopin = true;
     setTimeout(() => {
       this.closePopin();
-    }, 693); // Le message se fermera après 3 secondes
+    }, 900); // Le message se fermera après un certain temps
   }
 
   closePopin(): void {
@@ -54,9 +55,10 @@ export class ArtistsListComponent implements OnInit {
         this.filteredArtists = [...this.artists];
         this.totalPages = data.totalPages;
       },
-      () => {
-        this.showMessage('Erreur lors de la récupération des artistes.');
-      }
+      (error) => {
+          // Redirigez vers le modal d'erreur pour l'erreur 500
+          this.router.navigate(['/server-error']);
+        }
     );
   }
 

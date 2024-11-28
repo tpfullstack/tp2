@@ -22,6 +22,8 @@ export class CreateEventComponent implements OnInit {
   selectedArtistIds: string[] = [];
   showPopin: boolean = false;
   popinMessage: string = '';
+  isStartDateValid: boolean = true;
+  isEndDateValid: boolean = true;
 
   constructor(
     private eventService: EventService,
@@ -33,13 +35,12 @@ export class CreateEventComponent implements OnInit {
   ngOnInit(): void {
     this.loadArtists();
   }
-  
 
   loadArtists(): void {
     this.artistService.getArtists(0, 100).subscribe(
       (data) => {
         this.artists = data.content || [];
-        this.cdr.detectChanges(); // Mise à jour de la vue
+        this.cdr.detectChanges();
       },
       (error) => {
         this.showMessage('Erreur lors du chargement des artistes.');
@@ -53,9 +54,21 @@ export class CreateEventComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-
   closePopin(): void {
     this.showPopin = false;
+  }
+
+  checkFutureDate(dateType: 'startDate' | 'endDate'): void {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(this.newEvent[dateType]);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (dateType === 'startDate') {
+      this.isStartDateValid = selectedDate >= currentDate;
+    } else {
+      this.isEndDateValid = selectedDate >= currentDate;
+    }
   }
 
   createEvent(): void {
@@ -63,17 +76,22 @@ export class CreateEventComponent implements OnInit {
       this.showMessage('La date de fin doit être après la date de début.');
       return;
     }
-  
+
+    if (!this.isStartDateValid || !this.isEndDateValid) {
+      this.showMessage('Les dates doivent être dans le futur.');
+      return;
+    }
+
     this.newEvent.startDate = this.convertDateToApiFormat(this.newEvent.startDate);
     this.newEvent.endDate = this.convertDateToApiFormat(this.newEvent.endDate);
-  
+
     this.eventService.createEvent(this.newEvent).subscribe(
       (eventResponse) => {
         if (this.selectedArtistIds.length > 0) {
           const artistLinkRequests = this.selectedArtistIds.map((artistId) =>
             this.eventService.linkArtistToEvent(eventResponse.id, artistId).toPromise()
           );
-  
+
           Promise.all(artistLinkRequests)
             .then(() => {
               this.eventService.setGlobalMessage('Événement créé avec succès.');
@@ -92,7 +110,6 @@ export class CreateEventComponent implements OnInit {
       }
     );
   }
-  
 
   closeModal(): void {
     this.eventService.setGlobalMessage('Création d\'événement annulée.');

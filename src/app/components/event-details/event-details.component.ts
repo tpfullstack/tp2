@@ -18,6 +18,8 @@ export class EventDetailComponent implements OnInit {
   eventId: string = '';
   showPopin: boolean = false;
   popinMessage: string = '';
+  isStartDateValid: boolean = true;
+  isEndDateValid: boolean = true;
 
   constructor(
     private eventService: EventService,
@@ -43,6 +45,8 @@ export class EventDetailComponent implements OnInit {
           endDate: this.normalizeDate(data.endDate)
         };
         this.updateAvailableArtistsStatus();
+        this.checkFutureDate('startDate');
+        this.checkFutureDate('endDate');
       },
       (error) => {
         this.showMessage('Impossible de récupérer les détails de l\'événement.');
@@ -75,9 +79,29 @@ export class EventDetailComponent implements OnInit {
     }
   }
 
+  checkFutureDate(dateType: 'startDate' | 'endDate'): void {
+    if (!this.selectedEvent || !this.selectedEvent[dateType]) return;
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(this.selectedEvent[dateType]);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (dateType === 'startDate') {
+      this.isStartDateValid = selectedDate >= currentDate;
+    } else {
+      this.isEndDateValid = selectedDate >= currentDate;
+    }
+  }
+
   updateEvent(): void {
     if (new Date(this.selectedEvent.startDate) > new Date(this.selectedEvent.endDate)) {
       this.showMessage('La date de fin doit être après la date de début.');
+      return;
+    }
+
+    if (!this.isStartDateValid || !this.isEndDateValid) {
+      this.showMessage('Les dates doivent être dans le futur.');
       return;
     }
 
