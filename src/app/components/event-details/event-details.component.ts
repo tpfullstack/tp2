@@ -54,7 +54,7 @@ export class EventDetailComponent implements OnInit {
         }
       },
       (error) => {
-        this.eventService.setGlobalMessage('Impossible de récupérer les détails de l\'événement. L\'événementn\'existe pas.');
+        this.eventService.setGlobalMessage('Impossible de récupérer les détails de l\'événement. L\'événement n\'existe pas.');
         this.router.navigate(['/events']);
       }
     );
@@ -105,18 +105,19 @@ export class EventDetailComponent implements OnInit {
       this.showMessage('La date de fin doit être après la date de début.');
       return;
     }
-
+  
     if (!this.isStartDateValid || !this.isEndDateValid) {
       this.showMessage('Les dates doivent être dans le futur.');
       return;
     }
-
+  
     if (this.selectedEvent) {
       const updatedEvent = {
         label: this.selectedEvent.label,
         startDate: this.convertDateToApiFormat(new Date(this.selectedEvent.startDate)),
         endDate: this.convertDateToApiFormat(new Date(this.selectedEvent.endDate))
       };
+  
       this.eventService.updateEvent(this.eventId, updatedEvent).subscribe(
         (response) => {
           this.eventService.setGlobalMessage('Événement mis à jour avec succès.');
@@ -182,10 +183,7 @@ export class EventDetailComponent implements OnInit {
   }
 
   convertDateToApiFormat(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return date.toISOString().split('T')[0];
   }
 
   showMessage(message: string): void {

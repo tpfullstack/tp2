@@ -3,12 +3,12 @@ import { ArtistService } from '../../services/artist.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ErrorModalComponent } from '../error-modal/error-modal.component'; // Importez votre modal d'erreur
+import { ErrorModalComponent } from '../error-modal/error-modal.component';
 
 @Component({
   selector: 'app-artists-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ErrorModalComponent], // Ajoutez le modal ici
+  imports: [CommonModule, FormsModule, ErrorModalComponent], 
   templateUrl: './artists-list.component.html',
   styleUrls: ['./artists-list.component.css']
 })
@@ -41,7 +41,7 @@ export class ArtistsListComponent implements OnInit {
     this.showPopin = true;
     setTimeout(() => {
       this.closePopin();
-    }, 900); // Le message se fermera après un certain temps
+    }, 900); 
   }
 
   closePopin(): void {
@@ -56,7 +56,6 @@ export class ArtistsListComponent implements OnInit {
         this.totalPages = data.totalPages;
       },
       (error) => {
-          // Redirigez vers le modal d'erreur pour l'erreur 500
           this.router.navigate(['/server-error']);
         }
     );

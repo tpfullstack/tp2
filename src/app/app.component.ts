@@ -6,10 +6,10 @@ import { CreateEventComponent } from './components/create-event/create-event.com
 import { HeaderComponent } from './components/header/header.component';
 import { EventDetailComponent } from './components/event-details/event-details.component';
 import { ArtistDetailComponent } from './components/artist-details/artist-details.component';
-import { ErrorModalComponent } from './components/error-modal/error-modal.component'; // Importer le modal d'erreur
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component'; // Importer le composant 404
+import { ErrorModalComponent } from './components/error-modal/error-modal.component'; 
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { CreateArtistComponent } from './components/create-artist/create-artist.component';
-import { Error500Component } from './components/error-500/error-500.component'; // Importez le nouveau composant
+import { Error500Component } from './components/error-500/error-500.component';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +17,8 @@ import { Error500Component } from './components/error-500/error-500.component'; 
   imports: [
     RouterOutlet,
     CreateArtistComponent,
-    ErrorModalComponent, // Assurez-vous que ce composant est autonome
-    PageNotFoundComponent, // Assurez-vous que ce composant est autonome
+    ErrorModalComponent,
+    PageNotFoundComponent, 
     ArtistsListComponent,
     EventListComponent,
     CreateEventComponent,

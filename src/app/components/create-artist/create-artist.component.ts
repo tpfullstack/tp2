@@ -84,10 +84,10 @@ export class CreateArtistComponent implements OnInit {
   toggleEventSelection(eventId: string): void {
     const index = this.selectedEventIds.indexOf(eventId);
     if (index > -1) {
-      // Si l'événement est déjà sélectionné, le retirer
+      
       this.selectedEventIds.splice(index, 1);
     } else {
-      // Sinon, ajouter l'événement à la sélection
+      
       this.selectedEventIds.push(eventId);
     }
   }

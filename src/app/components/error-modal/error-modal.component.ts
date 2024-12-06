@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-error-modal',
-  standalone: true, // Assurez-vous que c'est bien ici
+  standalone: true,
   templateUrl: './error-modal.component.html',
   styleUrls: ['./error-modal.component.css']
 })
@@ -13,6 +13,6 @@ export class ErrorModalComponent {
   constructor(private router: Router) {}
 
   redirectToHome() {
-    this.router.navigate(['/']); // Redirige vers la page d'accueil
+    this.router.navigate(['/']); 
   }
 }

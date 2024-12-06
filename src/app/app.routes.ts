@@ -6,7 +6,7 @@ import { EventDetailComponent } from './components/event-details/event-details.c
 import { ArtistDetailComponent } from './components/artist-details/artist-details.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { Error500Component } from './components/error-500/error-500.component'; // Importez le nouveau composant
+import { Error500Component } from './components/error-500/error-500.component';
 
 export const routes: Route[] = [
     {
@@ -39,11 +39,11 @@ export const routes: Route[] = [
         pathMatch: 'full'
     },
     {
-        path: 'server-error', // Nouvelle route pour l'erreur 500
+        path: 'server-error',
         component: Error500Component
     },
     {
-        path: '**', // Wildcard route for handling all other undefined routes (404)
+        path: '**',
         component: PageNotFoundComponent
     }
 ];

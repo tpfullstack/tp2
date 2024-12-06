@@ -51,7 +51,7 @@ setGlobalMessage(message: string): void {
 
 getGlobalMessage(): string {
   const message = this.globalMessage;
-  this.globalMessage = ''; // Réinitialiser après récupération
+  this.globalMessage = ''; 
   return message;
 }
 
