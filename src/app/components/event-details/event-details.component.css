@@ -149,7 +149,7 @@ button.dissociate:hover {
   margin-bottom: 10px;
 }
 
-/* Styles pour la barre de défilement */
+
 .artists-list-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -187,4 +187,8 @@ button.dissociate:hover {
   color: #666;
   font-style: italic;
   padding: 20px;
+}
+.required {
+  color: red;
+  margin-right: 4px;
 }

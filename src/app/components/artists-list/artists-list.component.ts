@@ -14,12 +14,13 @@ import { ErrorModalComponent } from '../error-modal/error-modal.component';
 })
 export class ArtistsListComponent implements OnInit {
   artists: any[] = [];
-  filteredArtists: any[] = [];
-  selectedArtist: any = null;
   currentPage: number = 0;
   pageSize: number = 10;
   totalPages: number = 0;
+  totalElements: number = 0;
   searchTerm: string = '';
+  sortColumn: string = 'label';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   showPopin: boolean = false;
   popinMessage: string = '';
@@ -41,7 +42,7 @@ export class ArtistsListComponent implements OnInit {
     this.showPopin = true;
     setTimeout(() => {
       this.closePopin();
-    }, 900); 
+    }, 2500); 
   }
 
   closePopin(): void {
@@ -49,22 +50,38 @@ export class ArtistsListComponent implements OnInit {
   }
 
   loadArtists(): void {
-    this.artistService.getArtists(this.currentPage, this.pageSize).subscribe(
+    const filterParams = this.searchTerm ? { label: this.searchTerm } : {};
+    const pageable = {
+      page: this.currentPage,
+      size: this.pageSize,
+      sort: [`${this.sortColumn},${this.sortDirection}`]
+    };
+
+    this.artistService.getArtists(filterParams, pageable).subscribe(
       (data) => {
         this.artists = data.content;
-        this.filteredArtists = [...this.artists];
         this.totalPages = data.totalPages;
+        this.totalElements = data.totalElements;
       },
       (error) => {
-          this.router.navigate(['/server-error']);
-        }
+        this.router.navigate(['/server-error']);
+      }
     );
   }
 
   onSearch(): void {
-    this.filteredArtists = this.artists.filter(artist =>
-      artist.label.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    this.currentPage = 0;
+    this.loadArtists();
+  }
+
+  sortBy(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.loadArtists();
   }
 
   decrementPage(): void {
@@ -83,22 +100,6 @@ export class ArtistsListComponent implements OnInit {
 
   navigateToAddArtist(): void {
     this.router.navigate(['/create-artist']);
-  }
-
-  closeModal(): void {
-    this.artistService.setGlobalMessage('Modification annulée.');
-    this.router.navigate(['/artists']);
-  }
-
-  detailsArtist(artistId: string): void {
-    this.artistService.getArtistById(artistId).subscribe(
-      (artist) => {
-        this.selectedArtist = artist;
-      },
-      () => {
-        this.showMessage('Erreur lors de la récupération des détails de l\'artiste.');
-      }
-    );
   }
 
   navigateToDetail(artistId: string): void {

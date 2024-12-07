@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { ArtistService } from '../../services/artist.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-event-list',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.css']
 })
-export class EventListComponent implements OnInit {
+export class EventListComponent implements OnInit, OnDestroy {
   events: any[] = [];
   availableArtists: any[] = [];
   selectedEvent: any = null;
@@ -26,18 +27,28 @@ export class EventListComponent implements OnInit {
   popinMessage: string = '';
   eventToDeleteId: string | null = null;
 
+  private messageSubscription: Subscription;
+
   constructor(
     private eventService: EventService,
     private artistService: ArtistService,
     private router: Router
-  ) { }
+  ) {
+    this.messageSubscription = this.eventService.getGlobalMessage().subscribe(message => {
+      if (message) {
+        this.showMessage(message);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.loadEvents();
     this.loadAvailableArtists();
-    const message = this.eventService.getGlobalMessage();
-    if (message) {
-      this.showMessage(message);
+  }
+
+  ngOnDestroy(): void {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
     }
   }
 
@@ -46,7 +57,7 @@ export class EventListComponent implements OnInit {
     this.showPopin = true;
     setTimeout(() => {
       this.closePopin();
-    }, 900);
+    }, 2500);
   }
 
   closePopin(): void {

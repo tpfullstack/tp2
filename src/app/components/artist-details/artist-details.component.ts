@@ -46,7 +46,7 @@ export class ArtistDetailComponent implements OnInit {
         }
       },
       (error) => {
-        this.artistService.setGlobalMessage('Impossible de récupérer les détails de l\'artiste. L\'artiste n\'existe pas.');
+        this.artistService.setGlobalMessage('404 : Ressource non trouvée.');
         this.router.navigate(['/artists']);
       }
     );
@@ -84,7 +84,7 @@ export class ArtistDetailComponent implements OnInit {
         },
         (error) => {
           if (error.status === 404) {
-            this.showMessage('L\'artiste à mettre à jour n\'existe pas.');
+            this.showMessage(' 404 - Ressource non trouvée.');
           } else {
             this.showMessage(`Erreur lors de la mise à jour de l'artiste: ${error.message}`);
           }
@@ -144,7 +144,7 @@ export class ArtistDetailComponent implements OnInit {
   showMessage(message: string): void {
     this.popinMessage = message;
     this.showPopin = true;
-    setTimeout(() => this.closePopin(), 900);
+    setTimeout(() => this.closePopin(), 2500);
   }
 
   closePopin(): void {

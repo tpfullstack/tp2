@@ -1,3 +1,4 @@
+<!-- artists-list.component.html -->
 <div class="artist-table-container">
   <div class="header-container">
     <h2 class="title">Liste d'artistes</h2>
@@ -10,13 +11,18 @@
   <table class="artist-table">
     <thead>
       <tr>
-        <th>Artiste</th>
+        <th (click)="sortBy('label')">
+          Artiste
+          <span *ngIf="sortColumn === 'label'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
         <th>Événements</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let artist of filteredArtists">
+      <tr *ngFor="let artist of artists">
         <td>{{ artist.label }}</td>
         <td>
           <ul>
@@ -33,7 +39,8 @@
 
   <div class="pagination">
     <button (click)="decrementPage()" [disabled]="currentPage === 0">Précédent</button>
-    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1 || filteredArtists.length < 10">Suivant</button>
+    <span>Page {{ currentPage + 1 }} sur {{ totalPages }}</span>
+    <button (click)="incrementPage()" [disabled]="currentPage === totalPages - 1">Suivant</button>
   </div>
 </div>
 

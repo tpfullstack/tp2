@@ -6,7 +6,7 @@
     
     <form (ngSubmit)="createEvent()" #eventForm="ngForm">
       <div>
-        <label for="label">Label :</label>
+        <label for="label"><span class="required">*</span> Label :</label>
         <input
           type="text"
           id="label"
@@ -23,7 +23,7 @@
       </div>
 
       <div>
-        <label for="startDate">Date de début :</label>
+        <label for="startDate"><span class="required">*</span> Date de début :</label>
         <input
           type="date"
           id="startDate"
@@ -42,7 +42,7 @@
       </div>
 
       <div>
-        <label for="endDate">Date de fin :</label>
+        <label for="endDate"><span class="required">*</span> Date de fin :</label>
         <input
           type="date"
           id="endDate"
@@ -61,21 +61,26 @@
       </div>
 
       <div *ngIf="newEvent.startDate && newEvent.endDate && newEvent.startDate > newEvent.endDate" class="error-message">
-        La date de fin doit être après la date de début.
+        <small>La date de fin doit être après la date de début.</small>
       </div>
 
       <!-- Sélection des artistes -->
       <div>
         <h3>Artistes :</h3>
         <div class="artists-list-container">
-          <div *ngFor="let artist of artists" class="artist-item">
-            <label>
-              <input type="checkbox" 
-                     [checked]="selectedArtistIds.includes(artist.id)"
-                     (change)="toggleArtistSelection(artist.id)">
-              {{ artist.label }}
-            </label>
+          <div *ngIf="artists.length > 0; else noArtists">
+            <div *ngFor="let artist of artists" class="artist-item">
+              <label>
+                <input type="checkbox" 
+                       [checked]="selectedArtistIds.includes(artist.id)"
+                       (change)="toggleArtistSelection(artist.id)">
+                {{ artist.label }}
+              </label>
+            </div>
           </div>
+          <ng-template #noArtists>
+            <p class="no-artists-message">Aucun artiste n'est disponible</p>
+          </ng-template>
         </div>
       </div>
 

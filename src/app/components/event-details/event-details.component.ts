@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { ArtistService } from '../../services/artist.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,7 +20,7 @@ export class EventDetailComponent implements OnInit {
   popinMessage: string = '';
   isStartDateValid: boolean = true;
   isEndDateValid: boolean = true;
-
+  artists: any[] = [];
   constructor(
     private eventService: EventService,
     private artistService: ArtistService,
@@ -45,16 +45,16 @@ export class EventDetailComponent implements OnInit {
             startDate: this.normalizeDate(data.startDate),
             endDate: this.normalizeDate(data.endDate)
           };
-          this.updateAvailableArtistsStatus();
+          this.loadAvailableArtists(); 
           this.checkFutureDate('startDate');
           this.checkFutureDate('endDate');
         } else {
-          this.eventService.setGlobalMessage('L\'événement demandé n\'existe pas.');
+          this.eventService.setGlobalMessage('404 : Ressource non trouvée.');
           this.router.navigate(['/events']);
         }
       },
       (error) => {
-        this.eventService.setGlobalMessage('Impossible de récupérer les détails de l\'événement. L\'événement n\'existe pas.');
+        this.eventService.setGlobalMessage('404 : Ressource non trouvée.');
         this.router.navigate(['/events']);
       }
     );
@@ -65,14 +65,19 @@ export class EventDetailComponent implements OnInit {
     return new Date(date).toISOString().split('T')[0];
   }
 
+
   loadAvailableArtists(): void {
-    this.artistService.getArtists(0, 100).subscribe(
+    const filterParams = {};
+    const pageable = {
+      page: 0,
+      size: 1000000,
+      sort: ['label,asc']
+    };
+  
+    this.artistService.getArtists(filterParams, pageable).subscribe(
       (data) => {
         this.availableArtists = data.content || [];
         this.updateAvailableArtistsStatus();
-      },
-      (error) => {
-        this.showMessage('Erreur lors du chargement des artistes disponibles.');
       }
     );
   }
@@ -189,7 +194,7 @@ export class EventDetailComponent implements OnInit {
   showMessage(message: string): void {
     this.popinMessage = message;
     this.showPopin = true;
-    setTimeout(() => this.closePopin(), 3000);
+    setTimeout(() => this.closePopin(), 2500);
   }
 
   closePopin(): void {

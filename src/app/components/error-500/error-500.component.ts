@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./error-500.component.css']
 })
 export class Error500Component {
-  errorMessage: string = "500 - Erreur Interne du Serveur";
+  errorMessage: string = "500 - Erreur serveur";
 
   constructor(private router: Router) {}
 

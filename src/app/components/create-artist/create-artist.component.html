@@ -6,7 +6,9 @@
     
     <form (ngSubmit)="createArtist()" #artistForm="ngForm">
       <div>
-        <label for="label">Nom de l'artiste :</label>
+        <label for="label">
+          <span class="required">*</span> Nom de l'artiste :
+        </label>
         <input
           type="text"
           id="label"
@@ -25,14 +27,19 @@
       <div>
         <h3>Événements :</h3>
         <div class="events-list-container">
-          <div *ngFor="let event of events" class="event-item">
-            <label>
-              <input type="checkbox" 
-                     [checked]="selectedEventIds.includes(event.id)"
-                     (change)="toggleEventSelection(event.id)">
-              {{ event.label }}
-            </label>
+          <div *ngIf="events.length > 0; else noEvents">
+            <div *ngFor="let event of events" class="event-item">
+              <label>
+                <input type="checkbox" 
+                       [checked]="selectedEventIds.includes(event.id)"
+                       (change)="toggleEventSelection(event.id)">
+                {{ event.label }}
+              </label>
+            </div>
           </div>
+          <ng-template #noEvents>
+            <p class="no-events-message">Aucun événement n'est disponible</p>
+          </ng-template>
         </div>
       </div>
 

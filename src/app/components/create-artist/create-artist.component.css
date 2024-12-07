@@ -142,11 +142,20 @@ button.btn-delete:hover {
   background-color:#f9f9f9 ;
  }
  .event-item label {
-  display:flex; /* Utiliser flex pour aligner la checkbox et le texte */
-  align-items:center; /* Centrer verticalement la checkbox et le texte */
-  cursor:pointer; /* Changer le curseur pour indiquer que c'est cliquable */
+  display:flex;
+  align-items:center;
+  cursor:pointer;
 }
 
 .event-item input[type="checkbox"] {
-  margin-right:10px; /* Espacement entre la checkbox et le texte */
+  margin-right:10px; 
+}
+.required {
+  color: red;
+  margin-right: 4px;
+}
+
+.no-events-message {
+  color: #888;
+  font-style: italic;
 }

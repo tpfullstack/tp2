@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,48 +10,55 @@ export class ArtistService {
 
   constructor(private http: HttpClient) { }
 
-  getArtists(page: number, size: number, sort?: string[]): Observable<any> {
+  getArtists(filterParams: any, pageable: any): Observable<any> {
     let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+      .set('page', pageable.page.toString())
+      .set('size', pageable.size.toString());
 
-    if (sort) {
-      sort.forEach((s) => (params = params.append('sort', s)));
+    if (pageable.sort) {
+      pageable.sort.forEach((s: string) => (params = params.append('sort', s)));
     }
 
-    return this.http.get<any>(this.apiUrl, { params }).pipe();
+    if (filterParams.label) {
+      params = params.set('label', filterParams.label);
+    }
+
+    return this.http.get<any>(this.apiUrl, { params });
+  }
+
+  getAllArtists(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/all`);
   }
 
   getArtistById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe();
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   createArtist(artist: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, artist).pipe(
-    );
+    return this.http.post<any>(this.apiUrl, artist);
   }
 
   updateArtist(id: string, artist: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, artist).pipe();
+    return this.http.put<any>(`${this.apiUrl}/${id}`, artist);
   }
 
   deleteArtistById(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe();
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
   getEventsForArtist(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}/events`).pipe();
+    return this.http.get<any>(`${this.apiUrl}/${id}/events`);
   }
+
   private globalMessage: string = '';
 
-setGlobalMessage(message: string): void {
-  this.globalMessage = message;
-}
+  setGlobalMessage(message: string): void {
+    this.globalMessage = message;
+  }
 
-getGlobalMessage(): string {
-  const message = this.globalMessage;
-  this.globalMessage = ''; 
-  return message;
-}
-
+  getGlobalMessage(): string {
+    const message = this.globalMessage;
+    this.globalMessage = ''; 
+    return message;
+  }
 }

@@ -5,7 +5,7 @@
     <form (ngSubmit)="updateEvent()" #eventForm="ngForm">
 
       <label for="label">
-        Nom de l'événement :
+        <span class="required">*</span> Nom de l'événement :
         <input type="text" [(ngModel)]="selectedEvent.label" name="label" required minlength="3"
           #labelInput="ngModel" />
         <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">
@@ -15,7 +15,7 @@
       </label>
 
       <label for="startDate">
-        Date de début :
+        <span class="required">*</span> Date de début :
         <input type="date" [(ngModel)]="selectedEvent.startDate" name="startDate" required #startDateInput="ngModel"
           (change)="checkFutureDate('startDate')" />
         <div *ngIf="startDateInput.invalid && (startDateInput.dirty || startDateInput.touched)" class="error-message">
@@ -27,7 +27,7 @@
       </label>
 
       <label for="endDate">
-        Date de fin :
+        <span class="required">*</span> Date de fin :
         <input type="date" [(ngModel)]="selectedEvent.endDate" name="endDate" required #endDateInput="ngModel"
           (change)="checkFutureDate('endDate')" />
         <div *ngIf="endDateInput.invalid && (endDateInput.dirty || endDateInput.touched)" class="error-message">

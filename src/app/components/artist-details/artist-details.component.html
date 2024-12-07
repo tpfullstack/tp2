@@ -5,7 +5,7 @@
     <form (ngSubmit)="updateArtist()" #artistForm="ngForm">
 
       <label for="label">
-        Nom de l'artiste :
+        <span class="required">*</span> Nom de l'artiste :
         <input type="text" [(ngModel)]="selectedArtist.label" name="label" required minlength="3"
           #labelInput="ngModel" />
         <div *ngIf="labelInput.invalid && (labelInput.dirty || labelInput.touched)" class="error-message">

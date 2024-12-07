@@ -37,7 +37,14 @@ export class CreateEventComponent implements OnInit {
   }
 
   loadArtists(): void {
-    this.artistService.getArtists(0, 100).subscribe(
+    const filterParams = {};
+    const pageable = {
+      page: 0,
+      size: 1000000,
+      sort: ['label,asc']
+    };
+  
+    this.artistService.getArtists(filterParams, pageable).subscribe(
       (data) => {
         this.artists = data.content || [];
         this.cdr.detectChanges();

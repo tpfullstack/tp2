@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
   private apiUrl = 'http://localhost:8080/events';
+  private globalMessageSubject = new BehaviorSubject<string>('');
 
   constructor(private http: HttpClient) { }
 
@@ -42,15 +43,11 @@ export class EventService {
     return this.http.delete<any>(`${this.apiUrl}/${eventId}/artists/${artistId}`);
   }
 
-  private globalMessage: string = '';
-
   setGlobalMessage(message: string): void {
-    this.globalMessage = message;
+    this.globalMessageSubject.next(message);
   }
-  
-  getGlobalMessage(): string {
-    const message = this.globalMessage;
-    this.globalMessage = ''; 
-    return message;
+
+  getGlobalMessage(): Observable<string> {
+    return this.globalMessageSubject.asObservable();
   }
 }
