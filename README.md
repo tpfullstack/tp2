@@ -9,3 +9,11 @@ Run 'npm install' to get the required dependencies
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+
+#### Lien github: 
+[https://github.com/tpfullstack/tp2] (https://github.com/tpfullstack/tp2)
+
+## Pour lancer l'application : 
+```shell
+docker compose up -d --build
+```

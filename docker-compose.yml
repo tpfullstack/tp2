@@ -1,0 +1,7 @@
+services:
+  front:
+    container_name: front
+    network_mode: host
+    build: .
+    ports:
+      - "4200:4200"
